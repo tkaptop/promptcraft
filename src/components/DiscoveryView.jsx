@@ -5,6 +5,7 @@ import {
 import { getTemplateName } from '../utils/i18n';
 import { Sidebar } from './Sidebar';
 import { FireworkEffect } from './FireworkEffect';
+import { SEOContent } from './SEOContent';
 import { FEATURE_FLAGS } from '../constants/featureFlags';
 import { TAG_LABELS } from '../constants/styles';
 
@@ -147,10 +148,17 @@ export const DiscoveryView = React.memo(({
     );
   }
 
+  // Scroll to top handler for CTA button
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <main 
-      className="flex-1 flex items-stretch gap-4 overflow-hidden"
+    <main
+      className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden"
     >
+      {/* Hero Section - First Screen */}
+      <div className="min-h-screen flex items-stretch gap-4">
       {/* Middle Side: Categories Sidebar (Desktop Only) - 注释掉，之后版本启用 */}
       {/* {!isMobile && (
         <div 
@@ -339,8 +347,8 @@ export const DiscoveryView = React.memo(({
                       <div className={`w-1 h-1 rounded-full ${isDarkMode ? 'bg-gray-600' : 'bg-gray-400'}`} />
                       <p>Wechat: nanobana</p>
                       <a 
-                          href="https://github.com/tkaptop/promptcraft" 
-                          target="_blank" 
+                          href="https://github.com/tkaptop/promptcraft"
+                          target="_blank"
                           rel="noopener noreferrer"
                           className={`ml-2 inline-flex items-center justify-center w-6 h-6 rounded-full text-white transition-all duration-300 hover:scale-110 shadow-lg ${isDarkMode ? 'bg-gray-700 hover:bg-orange-500' : 'bg-gray-800 hover:bg-orange-500'}`}
                       >
@@ -352,8 +360,18 @@ export const DiscoveryView = React.memo(({
               </div>
           </footer>
       </div>
-      <FireworkEffect 
-        ref={fireworkRef} 
+      </div>
+      {/* End of Hero Section */}
+
+      {/* SEO Content Sections */}
+      <SEOContent
+        isDarkMode={isDarkMode}
+        language={language}
+        onExploreClick={scrollToTop}
+      />
+
+      <FireworkEffect
+        ref={fireworkRef}
         onStart={() => {
           // 播放烟花时自动切换到暗夜模式
           if (setThemeMode) setThemeMode('dark');

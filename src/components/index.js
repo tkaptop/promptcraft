@@ -14,3 +14,4 @@ export { DiscoveryView } from './DiscoveryView';
 export { MobileSettingsView } from './MobileSettingsView';
 export { SettingsView } from './SettingsView';
 export { Sidebar } from './Sidebar';
+export { SEOContent } from './SEOContent';

@@ -308,8 +308,22 @@ export const getCategoryLabel = (categoryId, categoryData, language, translation
 // 获取系统语言 (非中文环境默认返回 en)
 export const getSystemLanguage = () => {
   if (typeof window === 'undefined') return 'cn';
-  const lang = (navigator.language || navigator.languages?.[0] || 'zh-CN').toLowerCase();
-  return lang.startsWith('zh') ? 'cn' : 'en';
+  const lang = (navigator.languages?.[0] || navigator.language || 'en').toLowerCase();
+  const primary = lang.split('-')[0];
+
+  if (primary === 'zh') return 'cn';
+  if (primary === 'en') return 'en';
+  if (primary === 'ko') return 'ko';
+  if (primary === 'ja') return 'ja';
+  if (primary === 'es') return 'es';
+  if (primary === 'de') return 'de';
+  if (primary === 'fr') return 'fr';
+  if (primary === 'ru') return 'ru';
+  if (primary === 'ar') return 'ar';
+  if (primary === 'pt') return 'pt';
+  if (primary === 'it') return 'it';
+
+  return 'en';
 };
 
 // 等待图片加载完成，避免导出时空白

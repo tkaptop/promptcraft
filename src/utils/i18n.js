@@ -1,5 +1,5 @@
 // i18n 工具函数 - 封装翻译逻辑
-import { TRANSLATIONS } from '../constants/translations';
+import { getTranslation } from '../constants/translations';
 
 /**
  * 获取本地化文本
@@ -13,8 +13,8 @@ export const getLocalized = (obj, language) => {
 
   // 如果有 _key 属性，从 TRANSLATIONS 中查找
   if (obj._key) {
-    const translated = TRANSLATIONS[language]?.[obj._key] || TRANSLATIONS.en?.[obj._key];
-    if (translated) return translated;
+    const translated = getTranslation(language, obj._key);
+    if (translated && translated !== obj._key) return translated;
   }
 
   // 传统模式：直接从对象中获取对应语言的值
@@ -32,8 +32,8 @@ export const getBankLabel = (bankId, bankData, language) => {
 
   // 优先从 TRANSLATIONS 中查找
   const key = `bank_${bankId}_label`;
-  const translated = TRANSLATIONS[language]?.[key] || TRANSLATIONS.en?.[key];
-  if (translated) return translated;
+  const translated = getTranslation(language, key);
+  if (translated && translated !== key) return translated;
 
   // 回退到传统模式
   return getLocalized(bankData.label, language);
@@ -51,8 +51,8 @@ export const getBankOption = (bankId, optionIndex, optionData, language) => {
 
   // 优先从 TRANSLATIONS 中查找
   const key = `bank_${bankId}_opt_${optionIndex}`;
-  const translated = TRANSLATIONS[language]?.[key] || TRANSLATIONS.en?.[key];
-  if (translated) return translated;
+  const translated = getTranslation(language, key);
+  if (translated && translated !== key) return translated;
 
   // 回退到传统模式
   return getLocalized(optionData, language);
@@ -69,8 +69,8 @@ export const getTemplateName = (templateId, templateData, language) => {
 
   // 优先从 TRANSLATIONS 中查找
   const key = `tpl_${templateId}_name`;
-  const translated = TRANSLATIONS[language]?.[key] || TRANSLATIONS.en?.[key];
-  if (translated) return translated;
+  const translated = getTranslation(language, key);
+  if (translated && translated !== key) return translated;
 
   // 回退到传统模式
   return getLocalized(templateData.name, language);
@@ -87,8 +87,8 @@ export const getCategoryLabel = (categoryId, categoryData, language) => {
 
   // 优先从 TRANSLATIONS 中查找
   const key = `cat_${categoryId}_label`;
-  const translated = TRANSLATIONS[language]?.[key] || TRANSLATIONS.en?.[key];
-  if (translated) return translated;
+  const translated = getTranslation(language, key);
+  if (translated && translated !== key) return translated;
 
   // 回退到传统模式
   return getLocalized(categoryData.label, language);

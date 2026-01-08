@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { TRANSLATIONS } from '../constants/translations';
+import { getTranslation } from '../constants/translations';
 
 /**
  * 模板管理 Hook
@@ -73,8 +73,9 @@ export const useTemplateManagement = (
       if (typeof name === 'string') return `${name}${t('copy_suffix')}`;
       const newName = { ...name };
       Object.keys(newName).forEach(lang => {
-        const suffix = TRANSLATIONS[lang]?.copy_suffix || ' (Copy)';
-        newName[lang] = `${newName[lang]}${suffix}`;
+        const suffix = getTranslation(lang, 'copy_suffix');
+        const resolvedSuffix = suffix === 'copy_suffix' ? ' (Copy)' : suffix;
+        newName[lang] = `${newName[lang]}${resolvedSuffix}`;
       });
       return newName;
     };

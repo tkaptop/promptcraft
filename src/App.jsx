@@ -8,7 +8,7 @@ import { INITIAL_TEMPLATES_CONFIG, TEMPLATE_TAGS, SYSTEM_DATA_VERSION, PUBLIC_SH
 import { INITIAL_BANKS, INITIAL_DEFAULTS, INITIAL_CATEGORIES } from './data/banks';
 
 // ====== 导入常量配置 ======
-import { TRANSLATIONS } from './constants/translations';
+import { getTranslation, ensureTranslations, TRANSLATIONS } from './constants/translations';
 import { PREMIUM_STYLES, CATEGORY_STYLES, TAG_STYLES, TAG_LABELS } from './constants/styles';
 import { MASONRY_STYLES } from './constants/masonryStyles';
 
@@ -62,6 +62,31 @@ const App = () => {
   const activeTemplate = useMemo(() => {
     return templates.find(t => t.id === activeTemplateId) || templates[0];
   }, [templates, activeTemplateId]);
+
+  // i18n: lazy-load 非 cn/en 语言包并触发一次 re-render
+  const [, bumpI18nVersion] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    const lang = (language || 'en').toLowerCase();
+    if (TRANSLATIONS[lang]) return;
+    (async () => {
+      await ensureTranslations(lang);
+      if (!cancelled) bumpI18nVersion(v => v + 1);
+    })();
+    return () => { cancelled = true; };
+  }, [language]);
+
+  // 保证 templateLanguage 一定在当前模板支持的语言列表中（避免 localStorage 残留导致下拉框无选中项）
+  useEffect(() => {
+    const templateLangs = activeTemplate?.language
+      ? (Array.isArray(activeTemplate.language) ? activeTemplate.language : [activeTemplate.language])
+      : ['cn', 'en'];
+    const normalizedLangs = templateLangs.filter(Boolean);
+    if (normalizedLangs.length === 0) return;
+    if (!normalizedLangs.includes(templateLanguage)) {
+      setTemplateLanguage(normalizedLangs[0]);
+    }
+  }, [activeTemplate, templateLanguage, setTemplateLanguage]);
   
   const [lastAppliedDataVersion, setLastAppliedDataVersion] = useStickyState("", "app_data_version_v1");
   const [themeMode, setThemeMode] = useStickyState("system", "app_theme_mode_v1");
@@ -340,11 +365,7 @@ const App = () => {
 
   // Helper: Translate
   const t = (key, params = {}) => {
-    let str = TRANSLATIONS[language]?.[key] || TRANSLATIONS.en?.[key] || key;
-    Object.keys(params).forEach(k => {
-        str = str.replace(`{{${k}}}`, params[k]);
-    });
-    return str;
+    return getTranslation(language, key, params);
   };
 
   const displayTag = React.useCallback((tag) => {
@@ -2277,7 +2298,7 @@ const App = () => {
 
   return (
     <div
-      className={`flex h-screen h-[100dvh] w-screen overflow-hidden p-0 md:p-4 ${isDarkMode ? 'dark-mode dark-gradient-bg' : 'mesh-gradient-bg'}`}
+      className={`flex ${showDiscoveryOverlay ? 'min-h-screen' : 'h-screen h-[100dvh]'} w-screen ${showDiscoveryOverlay ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden'} p-0 md:p-4 ${isDarkMode ? 'dark-mode dark-gradient-bg' : 'mesh-gradient-bg'}`}
       onTouchMove={(e) => touchDraggingVar && onTouchDragMove(e.touches[0].clientX, e.touches[0].clientY)}
       onTouchEnd={(e) => touchDraggingVar && onTouchDragEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY)}
     >
@@ -2383,9 +2404,9 @@ const App = () => {
           {` {{${touchDraggingVar.key}}} `}
         </div>
       )}
-      
+
       {/* 主视图区域 */}
-      <div className="flex-1 relative flex overflow-hidden">
+      <div className={`flex-1 relative flex ${showDiscoveryOverlay ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden'}`}>
         {isSettingsOpen && !isMobileDevice ? (
           <SettingsView
             language={language}
