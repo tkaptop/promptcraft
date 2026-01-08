@@ -175,5 +175,17 @@
   "credits_based_on": "Dieses Projekt basiert auf dem Open-Source-Projekt PromptFill.",
   "credits_thanks": "Besonderer Dank an den ursprünglichen Autor:",
   "manifesto_text": "Für Ersteller entwickelt. Alle Daten bleiben lokal; wir laden Ihre Prompts niemals hoch.",
-  "tap_to_view_details": "Tippen oder nach oben wischen, um Details anzuzeigen"
+  "tap_to_view_details": "Tippen oder nach oben wischen, um Details anzuzeigen",
+  "footer_brand_desc": "Eine professionelle AI-Bild-Prompt-Bibliothek für Nano Banana. Durchsuchen Sie kuratierte Vorlagen, passen Sie sie mit Variablen an und erstellen Sie beeindruckende AI-Bilder.",
+  "footer_made_with": "Erstellt mit",
+  "footer_by": "von",
+  "footer_resources": "Ressourcen",
+  "footer_legal": "Rechtliches",
+  "footer_contact_us": "Kontakt",
+  "footer_terms": "Nutzungsbedingungen",
+  "footer_privacy": "Datenschutzrichtlinie",
+  "footer_all_rights": "Alle Rechte vorbehalten.",
+  "footer_wechat_official": "WeChat Offiziell",
+  "legal_i_understand": "Verstanden",
+  "legal_last_updated": "Zuletzt aktualisiert"
 }

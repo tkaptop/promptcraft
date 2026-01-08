@@ -175,5 +175,17 @@
   "credits_based_on": "このプロジェクトはオープンソースプロジェクトPromptFillを基にしています。",
   "credits_thanks": "原作者に特別な感謝を：",
   "manifesto_text": "クリエイターのために構築。すべてのデータはローカルに保存され、プロンプトはアップロードされません。",
-  "tap_to_view_details": "タップまたは上にスワイプして詳細を表示"
+  "tap_to_view_details": "タップまたは上にスワイプして詳細を表示",
+  "footer_brand_desc": "Nano Banana専用のプロフェッショナルなAI画像プロンプトライブラリ。厳選されたテンプレートを閲覧し、変数でカスタマイズして、素晴らしいAI画像を生成。",
+  "footer_made_with": "Made with",
+  "footer_by": "by",
+  "footer_resources": "リソース",
+  "footer_legal": "法的情報",
+  "footer_contact_us": "お問い合わせ",
+  "footer_terms": "利用規約",
+  "footer_privacy": "プライバシーポリシー",
+  "footer_all_rights": "All rights reserved.",
+  "footer_wechat_official": "WeChat公式アカウント",
+  "legal_i_understand": "了解しました",
+  "legal_last_updated": "最終更新日"
 }

@@ -175,5 +175,17 @@
   "credits_based_on": "هذا المشروع مبني على المشروع مفتوح المصدر PromptFill.",
   "credits_thanks": "شكر خاص للمؤلف الأصلي:",
   "manifesto_text": "مبني للمبدعين. تبقى جميع البيانات محلية؛ نحن لا نرفع نصوصك أبداً.",
-  "tap_to_view_details": "انقر أو اسحب للأعلى لعرض التفاصيل"
+  "tap_to_view_details": "انقر أو اسحب للأعلى لعرض التفاصيل",
+  "footer_brand_desc": "مكتبة احترافية لمطالبات صور الذكاء الاصطناعي مصممة لـ Nano Banana. تصفح القوالب المختارة، وخصصها بالمتغيرات، وأنشئ صور ذكاء اصطناعي مذهلة.",
+  "footer_made_with": "صُنع بـ",
+  "footer_by": "بواسطة",
+  "footer_resources": "الموارد",
+  "footer_legal": "قانوني",
+  "footer_contact_us": "اتصل بنا",
+  "footer_terms": "شروط الخدمة",
+  "footer_privacy": "سياسة الخصوصية",
+  "footer_all_rights": "جميع الحقوق محفوظة.",
+  "footer_wechat_official": "حساب WeChat الرسمي",
+  "legal_i_understand": "فهمت",
+  "legal_last_updated": "آخر تحديث"
 }

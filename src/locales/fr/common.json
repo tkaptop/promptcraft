@@ -175,5 +175,17 @@
   "credits_based_on": "Ce projet est basé sur le projet open-source PromptFill.",
   "credits_thanks": "Remerciements spéciaux à l'auteur original :",
   "manifesto_text": "Conçu pour les créateurs. Toutes les données restent locales ; nous ne téléchargeons jamais vos prompts.",
-  "tap_to_view_details": "Appuyez ou glissez vers le haut pour voir les détails"
+  "tap_to_view_details": "Appuyez ou glissez vers le haut pour voir les détails",
+  "footer_brand_desc": "Une bibliothèque professionnelle de prompts d'images IA conçue pour Nano Banana. Parcourez des modèles sélectionnés, personnalisez avec des variables et générez de superbes images IA.",
+  "footer_made_with": "Créé avec",
+  "footer_by": "par",
+  "footer_resources": "Ressources",
+  "footer_legal": "Mentions légales",
+  "footer_contact_us": "Nous contacter",
+  "footer_terms": "Conditions d'utilisation",
+  "footer_privacy": "Politique de confidentialité",
+  "footer_all_rights": "Tous droits réservés.",
+  "footer_wechat_official": "Compte officiel WeChat",
+  "legal_i_understand": "J'ai compris",
+  "legal_last_updated": "Dernière mise à jour"
 }
