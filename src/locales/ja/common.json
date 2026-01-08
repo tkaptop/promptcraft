@@ -197,5 +197,7 @@
   "footer_all_rights": "All rights reserved.",
   "footer_wechat_official": "WeChat公式アカウント",
   "legal_i_understand": "了解しました",
-  "legal_last_updated": "最終更新日"
+  "legal_last_updated": "最終更新日",
+  "wechat_scan_to_add": "スキャンして作者をWeChatに追加",
+  "wechat_connect": "WeChatで繋がる"
 }

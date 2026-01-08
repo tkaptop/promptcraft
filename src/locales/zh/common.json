@@ -197,5 +197,7 @@
   "footer_all_rights": "保留所有权利。",
   "footer_wechat_official": "微信公众号",
   "legal_i_understand": "我已了解",
-  "legal_last_updated": "最后更新"
+  "legal_last_updated": "最后更新",
+  "wechat_scan_to_add": "扫码添加作者微信",
+  "wechat_connect": "微信联系"
 }

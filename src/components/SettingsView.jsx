@@ -561,15 +561,15 @@ export const SettingsView = ({
               />
             </SettingSection>
 
-            <SettingSection title="Legal">
+            <SettingSection title={t('footer_legal')}>
               <SettingItem
                 icon={FileText}
-                label="Terms of Service"
+                label={t('footer_terms')}
                 onClick={() => openLegal('terms')}
               />
               <SettingItem
                 icon={Shield}
-                label="Privacy Policy"
+                label={t('footer_privacy')}
                 onClick={() => openLegal('privacy')}
               />
             </SettingSection>
@@ -654,8 +654,8 @@ export const SettingsView = ({
                   className="w-full h-full object-contain rounded-lg"
                 />
               </div>
-              <p className={`text-sm font-black mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>扫码添加作者微信</p>
-              <p className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>Connect on WeChat</p>
+              <p className={`text-sm font-black mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{t('wechat_scan_to_add')}</p>
+              <p className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>{t('wechat_connect')}</p>
             </div>
           </div>
         </div>

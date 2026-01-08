@@ -197,5 +197,7 @@
   "footer_all_rights": "All rights reserved.",
   "footer_wechat_official": "WeChat Official Account",
   "legal_i_understand": "I Understand",
-  "legal_last_updated": "Last updated"
+  "legal_last_updated": "Last updated",
+  "wechat_scan_to_add": "Scan to add author on WeChat",
+  "wechat_connect": "Connect on WeChat"
 }

@@ -2438,7 +2438,7 @@ const App = () => {
       )}
 
       {/* 主视图区域 */}
-      <div className={`flex-1 relative flex ${showDiscoveryOverlay ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden'}`}>
+      <div className={`flex-1 relative flex md:ml-[82px] ${showDiscoveryOverlay ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden'}`}>
         {isSettingsOpen && !isMobileDevice ? (
           <SettingsView
             language={language}

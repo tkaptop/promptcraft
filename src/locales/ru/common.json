@@ -197,5 +197,7 @@
   "footer_all_rights": "Все права защищены.",
   "footer_wechat_official": "Официальный аккаунт WeChat",
   "legal_i_understand": "Понятно",
-  "legal_last_updated": "Последнее обновление"
+  "legal_last_updated": "Последнее обновление",
+  "wechat_scan_to_add": "Отсканируйте, чтобы добавить автора в WeChat",
+  "wechat_connect": "Связаться в WeChat"
 }

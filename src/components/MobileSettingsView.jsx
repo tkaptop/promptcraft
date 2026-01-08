@@ -401,15 +401,15 @@ export const MobileSettingsView = ({
       </SettingSection>
 
       {/* 5. 法律条款 */}
-      <SettingSection title="Legal" icon={Shield}>
+      <SettingSection title={t('footer_legal')} icon={Shield}>
         <SettingItem
           icon={FileText}
-          label="Terms of Service"
+          label={t('footer_terms')}
           onClick={() => openLegal('terms')}
         />
         <SettingItem 
           icon={Shield} 
-          label="Privacy Policy" 
+          label={t('footer_privacy')} 
           onClick={() => openLegal('privacy')}
         />
       </SettingSection>
@@ -438,8 +438,8 @@ export const MobileSettingsView = ({
                   className="w-full h-full object-contain rounded-2xl"
                 />
               </div>
-              <p className={`text-lg font-black mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>扫码添加作者微信</p>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Connect on WeChat</p>
+              <p className={`text-lg font-black mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{t('wechat_scan_to_add')}</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">{t('wechat_connect')}</p>
             </div>
           </div>
         </div>

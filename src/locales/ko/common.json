@@ -197,5 +197,7 @@
   "footer_all_rights": "All rights reserved.",
   "footer_wechat_official": "WeChat 공식 계정",
   "legal_i_understand": "확인했습니다",
-  "legal_last_updated": "최종 업데이트"
+  "legal_last_updated": "최종 업데이트",
+  "wechat_scan_to_add": "스캔하여 WeChat에서 작성자 추가",
+  "wechat_connect": "WeChat에서 연결"
 }
