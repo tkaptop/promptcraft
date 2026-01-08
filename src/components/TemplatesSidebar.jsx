@@ -5,7 +5,7 @@ import {
   Pencil, Copy as CopyIcon, Download, Trash2
 } from 'lucide-react';
 import { PremiumButton } from './PremiumButton';
-import { getLocalized } from '../utils/helpers';
+import { getTemplateName } from '../utils/i18n';
 
 /**
  * TemplatesSidebar 组件 - 负责展示左侧模版列表
@@ -93,7 +93,7 @@ export const TemplatesSidebar = React.memo(({
                         if (typeof setShowImportTokenModal === 'function') {
                           setShowImportTokenModal(true);
                         } else {
-                          const val = prompt(language === 'cn' ? '请输入分享口令或链接' : 'Please enter share token or link');
+                          const val = prompt(t('enter_share_token'));
                           if (val && typeof handleManualTokenImport === 'function') {
                             handleManualTokenImport(val);
                           }
@@ -191,9 +191,16 @@ export const TemplatesSidebar = React.memo(({
                                     </div>
                                 </div>
                               ) : (
-                                <span className={`truncate text-[14px] tracking-tight leading-tight transition-all ${activeTemplateId === t_item.id ? (isDarkMode ? 'font-bold text-orange-400' : 'font-bold text-gray-900') : (isDarkMode ? 'font-semibold text-gray-500 group-hover:text-gray-300' : 'font-semibold text-gray-600 group-hover:text-gray-800')}`}>
-                                  {getLocalized(t_item.name, language)}
-                                </span>
+                                <div className="flex items-center gap-1.5 overflow-hidden">
+                                  <span className={`truncate text-[14px] tracking-tight leading-tight transition-all ${activeTemplateId === t_item.id ? (isDarkMode ? 'font-bold text-orange-400' : 'font-bold text-gray-900') : (isDarkMode ? 'font-semibold text-gray-500 group-hover:text-gray-300' : 'font-semibold text-gray-600 group-hover:text-gray-800')}`}>
+                                    {getTemplateName(t_item.id, t_item, language)}
+                                  </span>
+                                  {t_item.hot && (
+                                    <span className="flex-shrink-0 px-1.5 py-0.5 text-[8px] font-black bg-red-500 text-white rounded uppercase tracking-wider">
+                                      HOT
+                                    </span>
+                                  )}
+                                </div>
                               )}
                           </div>
                       </div>

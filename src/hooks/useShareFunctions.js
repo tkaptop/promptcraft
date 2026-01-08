@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { compressTemplate, decompressTemplate, copyToClipboard, getLocalized } from '../utils/helpers';
+import { compressTemplate, decompressTemplate, copyToClipboard } from '../utils/helpers';
+import { getTemplateName } from '../utils/i18n';
 import { PUBLIC_SHARE_URL } from '../data/templates';
 
 // ====== 私有后端配置 ======
@@ -214,9 +215,9 @@ export const useShareFunctions = (
       setSharedTemplateData(decoded);
       setShowShareImportModal(true);
     } else {
-      alert(language === 'cn' ? '无效的分享口令或链接' : 'Invalid share token or link');
+      alert(t('invalid_share_token'));
     }
-  }, [language]);
+  }, [t]);
 
   /**
    * 导入分享的模版
@@ -430,7 +431,7 @@ export const useShareFunctions = (
         alert(t('share_success'));
         setShowShareOptionsModal(false);
       } else {
-        alert(language === 'cn' ? '复制失败，请尝试口令分享' : 'Copy failed');
+        alert(t('copy_failed'));
       }
     } catch (err) {
       console.error("Share failed:", err);
@@ -438,7 +439,7 @@ export const useShareFunctions = (
     } finally {
       setIsGenerating(false);
     }
-  }, [activeTemplate, getShortCodeFromServer, t, language, banks, categories, prefetchedShortCode]);
+  }, [activeTemplate, getShortCodeFromServer, t, banks, categories, prefetchedShortCode]);
 
   /**
    * 复制分享口令 (支持短码)
@@ -461,18 +462,18 @@ export const useShareFunctions = (
         } catch (e) {}
       }
 
-      const templateName = getLocalized(activeTemplate.name, language);
+      const templateName = getTemplateName(activeTemplate.id, activeTemplate, language);
       const tokenText = `「Prompt分享」我的新模版：${templateName}\n复制整段文字，打开【提示词填空器】即可导入：\n#pf$${finalToken}$`;
 
       const success = await copyToClipboard(tokenText);
       if (success) {
-        alert(language === 'cn' ? '分享口令已复制，快去发给好友吧！' : 'Share token copied!');
+        alert(t('share_token_copied'));
         setShowShareOptionsModal(false);
       }
     } finally {
       setIsGenerating(false);
     }
-  }, [activeTemplate, language, getShortCodeFromServer, banks, categories, prefetchedShortCode]);
+  }, [activeTemplate, language, getShortCodeFromServer, t, banks, categories, prefetchedShortCode]);
 
   // 计算分享 URL（仅显示短码链接）
   const currentShareUrl = useMemo(() => {

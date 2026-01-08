@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { Eye, Edit3, Share2, Copy, Check, ImageIcon, Pencil, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
-import { getLocalized } from '../utils/helpers';
+import { Eye, Edit3, Share2, Copy, Check, ImageIcon, ExternalLink, Pencil, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
+import { getLocalized, getTemplateName } from '../utils/i18n';
 import { TemplatePreview } from './TemplatePreview';
 import { VisualEditor } from './VisualEditor';
 import { EditorToolbar } from './EditorToolbar';
@@ -77,6 +77,7 @@ export const TemplateEditor = React.memo(({
   handleShareLink,
   handleExportImage,
   isExporting,
+  handleCopyAndGenerate,
   handleCopy,
   copied,
 
@@ -166,7 +167,7 @@ export const TemplateEditor = React.memo(({
 
                 {!isMobileDevice && (
                   <h1 className={`text-xl md:text-2xl font-black truncate tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {getLocalized(activeTemplate?.name, language)}
+                    {getTemplateName(activeTemplate?.id, activeTemplate, language)}
                   </h1>
                 )}
 
@@ -224,43 +225,59 @@ export const TemplateEditor = React.memo(({
               </div>
             </div>
 
-            {/* 第二行：分享、保存、复制按钮 */}
-            <div className="w-full flex items-center justify-end gap-1.5 md:gap-3 shrink-0">
-              <PremiumButton
-                onClick={handleShareLink}
-                title={language === 'cn' ? '分享模版' : t('share_link')}
-                icon={Share2}
-                isDarkMode={isDarkMode}
-                className="flex-none"
-              >
-                <span className="hidden md:inline ml-1.5">{language === 'cn' ? '分享模版' : t('share')}</span>
-              </PremiumButton>
+            {/* 第二行：复制（左） + 分享、保存、去生成（右） */}
+            <div className="w-full flex items-center justify-between gap-1.5 md:gap-3 shrink-0">
+              <div className="flex items-center gap-1.5 md:gap-3">
+                <PremiumButton
+                  onClick={handleCopy}
+                  title={copied ? t('copied') : t('copy_result')}
+                  icon={copied ? Check : Copy}
+                  active={true}
+                  isDarkMode={isDarkMode}
+                  className="flex-none"
+                >
+                  <span className="hidden md:inline ml-1.5 truncate">
+                    {copied ? t('copied') : t('copy_result')}
+                  </span>
+                </PremiumButton>
+              </div>
 
-              <PremiumButton
-                onClick={handleExportImage}
-                disabled={isEditing || isExporting}
-                title={isExporting ? t('exporting') : (language === 'cn' ? '导出长图' : t('export_image'))}
-                icon={ImageIcon}
-                isDarkMode={isDarkMode}
-                className="flex-none"
-              >
-                <span className="hidden md:inline ml-1.5 truncate">
-                  {isExporting ? (language === 'cn' ? '导出中...' : 'Exp...') : (language === 'cn' ? '导出长图' : 'Img')}
-                </span>
-              </PremiumButton>
+              <div className="flex items-center gap-1.5 md:gap-3">
+                <PremiumButton
+                  onClick={handleShareLink}
+                  title={language === 'cn' ? '分享模版' : t('share_link')}
+                  icon={Share2}
+                  isDarkMode={isDarkMode}
+                  className="flex-none"
+                >
+                  <span className="hidden md:inline ml-1.5">{t('share')}</span>
+                </PremiumButton>
 
-              <PremiumButton
-                onClick={handleCopy}
-                title={copied ? t('copied') : (language === 'cn' ? '复制结果' : t('copy_result'))}
-                icon={copied ? Check : Copy}
-                active={true}
-                isDarkMode={isDarkMode}
-                className="flex-none"
-              >
-                <span className="hidden md:inline ml-1.5 truncate">
-                  {copied ? t('copied') : (language === 'cn' ? '复制结果' : 'Copy')}
-                </span>
-              </PremiumButton>
+                <PremiumButton
+                  onClick={handleExportImage}
+                  disabled={isEditing || isExporting}
+                  title={isExporting ? t('exporting') : t('export_image')}
+                  icon={ImageIcon}
+                  isDarkMode={isDarkMode}
+                  className="flex-none"
+                >
+                  <span className="hidden md:inline ml-1.5 truncate">
+                    {isExporting ? t('exporting') : t('export_image')}
+                  </span>
+                </PremiumButton>
+
+                <PremiumButton
+                  onClick={handleCopyAndGenerate || (() => window.open('https://www.nanobananapro.site', '_blank', 'noopener,noreferrer'))}
+                  title={t('go_generate')}
+                  icon={ExternalLink}
+                  active={true}
+                  tone="danger"
+                  isDarkMode={isDarkMode}
+                  className="flex-none"
+                >
+                  <span className="hidden md:inline ml-1.5">{t('go_generate')}</span>
+                </PremiumButton>
+              </div>
             </div>
           </div>
         )}
@@ -295,7 +312,7 @@ export const TemplateEditor = React.memo(({
                 <div className={`px-8 pt-6 pb-4 flex flex-col gap-4 border-b ${isDarkMode ? 'bg-white/5 border-white/5' : 'bg-gray-100/50 border-gray-200'}`}>
                   <div className="flex flex-col gap-1.5">
                     <label className={`text-[10px] font-black uppercase tracking-widest ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
-                      {language === 'cn' ? '模版标题 (Title)' : 'Template Title'}
+                      {t('template_title')}
                     </label>
                     <input
                       type="text"
@@ -308,7 +325,7 @@ export const TemplateEditor = React.memo(({
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className={`text-[10px] font-black uppercase tracking-widest ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
-                      {language === 'cn' ? '作者 (Author)' : 'Author'}
+                      {t('author')}
                     </label>
                     <div className="relative">
                       <input
@@ -318,11 +335,11 @@ export const TemplateEditor = React.memo(({
                         onBlur={saveTemplateName}
                         disabled={INITIAL_TEMPLATES_CONFIG.some(cfg => cfg.id === activeTemplate.id)}
                         className={`text-sm font-bold bg-transparent border-b border-dashed focus:border-solid border-orange-500/30 focus:border-orange-500 focus:outline-none w-full pb-1 transition-all ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                        placeholder={language === 'cn' ? '作者名称...' : 'Author name...'}
+                        placeholder={t('author_placeholder')}
                       />
                       {INITIAL_TEMPLATES_CONFIG.some(cfg => cfg.id === activeTemplate.id) && (
                         <p className="text-[10px] text-orange-500/50 font-bold italic mt-1">
-                          {language === 'cn' ? '* 系统模版作者不可修改' : '* System template author is read-only'}
+                          {t('system_template_readonly')}
                         </p>
                       )}
                     </div>

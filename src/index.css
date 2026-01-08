@@ -424,6 +424,13 @@ body {
   color: white;
 }
 
+.premium-button-inner.light.is-active.tone-danger {
+  background: linear-gradient(180deg, #FF6B6B 0%, #D92D2D 100%) padding-box,
+              linear-gradient(0deg, #C81E1E 0%, #FFD1D1 100%) border-box;
+  box-shadow: 0px 0px 1px 1px rgba(165, 165, 165, 0.51);
+  color: white;
+}
+
 .premium-button-outer.light.is-active:hover {
   background: linear-gradient(180deg, #FFF0E7 0%, #DBC6BA 100%) padding-box,
               linear-gradient(0deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%) border-box;
@@ -453,6 +460,13 @@ body {
 .premium-button-inner.dark.is-active {
   background: linear-gradient(180deg, #FDB36B 9%, #FA7C21 100%) padding-box,
               linear-gradient(0deg, #E56428 0%, #FFD5B1 100%) border-box;
+  box-shadow: 0px 0px 1px 1px rgba(44, 41, 41, 0.51);
+  color: white;
+}
+
+.premium-button-inner.dark.is-active.tone-danger {
+  background: linear-gradient(180deg, #FF5C5C 0%, #B91C1C 100%) padding-box,
+              linear-gradient(0deg, #991B1B 0%, #FFB4B4 100%) border-box;
   box-shadow: 0px 0px 1px 1px rgba(44, 41, 41, 0.51);
   color: white;
 }

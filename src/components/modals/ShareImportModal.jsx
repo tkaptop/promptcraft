@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Share2, Download, ImageIcon } from 'lucide-react';
 import { PremiumButton } from '../PremiumButton';
-import { getLocalized } from '../../utils/helpers';
+import { getLocalized, getTemplateName } from '../../utils/i18n';
 
 /**
  * 分享模版导入弹窗组件
@@ -58,7 +58,7 @@ const ShareImportModal = ({ isOpen, templateData, onClose, onImport, t, TAG_STYL
             </div>
             <div className="min-w-0 flex-1">
               <h4 className={`text-2xl font-black tracking-tight truncate ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-                {getLocalized(templateData.name, language)}
+                {getTemplateName(templateData.id, templateData, language)}
               </h4>
               <p className="text-sm font-bold text-orange-500 uppercase tracking-widest mt-1">
                 {templateData.author ? `${t('shared_by')} ${templateData.author}` : t('official')}

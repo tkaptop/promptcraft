@@ -13,25 +13,31 @@ export const mergeTemplatesWithSystem = (currentTemplates, { backupSuffix }) => 
   currentTemplates.forEach(t => {
     if (systemMap.has(t.id)) {
       const sys = systemMap.get(t.id);
-      
+
       // 比较名称和内容（忽略 selections 等交互状态）
-      const isDifferent = JSON.stringify(t.name) !== JSON.stringify(sys.name) || 
+      const isDifferent = JSON.stringify(t.name) !== JSON.stringify(sys.name) ||
                           JSON.stringify(t.content) !== JSON.stringify(sys.content);
-      
+
       // 在 merged 列表中找到对应的系统模板进行状态合并
       const targetInMerged = merged.find(m => m.id === t.id);
-      if (targetInMerged && t.selections) {
+      if (targetInMerged) {
         // 迁移用户的填空选择 (selections)，保留用户已填的内容
-        targetInMerged.selections = { 
-          ...(targetInMerged.selections || {}), 
-          ...t.selections 
-        };
+        if (t.selections) {
+          targetInMerged.selections = {
+            ...(targetInMerged.selections || {}),
+            ...t.selections
+          };
+        }
+        // 同步系统模板的 hot 属性
+        if (sys.hot !== undefined) {
+          targetInMerged.hot = sys.hot;
+        }
       }
 
       if (isDifferent) {
         const backupId = makeUniqueKey(t.id, existingIds, "user");
         existingIds.add(backupId);
-        
+
         const duplicateName = (name) => {
           if (typeof name === 'string') return `${name}${backupSuffix || ""}`;
           const newName = { ...name };

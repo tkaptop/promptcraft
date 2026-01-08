@@ -58,7 +58,7 @@ const MobileTabBar = ({ activeTab, onTabChange, t, isDarkMode, themeMode, setThe
             ) : (themeMode === 'dark' ? <Moon size={20} /> : <Sun size={20} />)}
           </div>
           <span className="text-[10px] font-bold tracking-wide opacity-80">
-            {themeMode === 'system' ? (language === 'cn' ? '自动' : 'Auto') : (isDarkMode ? 'Dark' : 'Light')}
+            {themeMode === 'system' ? t('theme_auto') : (isDarkMode ? t('theme_dark') : t('theme_light'))}
           </span>
           {themeMode === 'system' && (
             <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-orange-500 rounded-full"></span>

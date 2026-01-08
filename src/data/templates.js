@@ -1088,7 +1088,8 @@ export const INITIAL_TEMPLATES_CONFIG = [
     author: "@berryxia（Berryxia.AI）",
     selections: {},
     tags: ["人物", "创意", "图表"],
-    language: ["cn", "en"]
+    language: ["cn", "en"],
+    hot: true
   },
   {
     id: "tpl_photo_grid",

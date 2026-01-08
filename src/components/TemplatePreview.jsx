@@ -3,7 +3,7 @@ import { Variable } from './Variable';
 import { VisualEditor } from './VisualEditor';
 import { EditorToolbar } from './EditorToolbar';
 import { ImageIcon, ArrowUpRight, Upload, Globe, RotateCcw, Pencil, Check, X, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
-import { getLocalized } from '../utils/helpers';
+import { getLocalized, getTemplateName } from '../utils/i18n';
 
 /**
  * TemplatePreview 组件 - 负责渲染模版的预览内容，包括变量交互
@@ -308,7 +308,7 @@ export const TemplatePreview = React.memo(({
                             <div className="mb-4 flex flex-col gap-3 animate-in fade-in slide-in-from-top-1 duration-200">
                                 <div className="flex flex-col gap-1.5">
                                     <label className={`text-[10px] font-black uppercase tracking-widest ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
-                                        {language === 'cn' ? '模版标题 (TITLE)' : 'Template Title'}
+                                        {t('template_title')}
                                     </label>
                                     <input 
                                         autoFocus
@@ -322,19 +322,19 @@ export const TemplatePreview = React.memo(({
                                 </div>
                                 <div className="flex flex-col gap-1.5 mt-2">
                                     <label className={`text-[10px] font-black uppercase tracking-widest ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
-                                        {language === 'cn' ? '作者 (AUTHOR)' : 'Author'}
+                                        {t('author')}
                                     </label>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         value={tempTemplateAuthor}
                                         onChange={(e) => setTempTemplateAuthor(e.target.value)}
                                         className={`text-sm font-bold bg-transparent border-b border-dashed focus:border-solid border-orange-500/30 focus:border-orange-500 focus:outline-none w-full pb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}
-                                        placeholder={language === 'cn' ? '作者名称...' : 'Author name...'}
+                                        placeholder={t('author_placeholder')}
                                         disabled={INITIAL_TEMPLATES_CONFIG.some(cfg => cfg.id === activeTemplate.id)}
                                     />
                                     {INITIAL_TEMPLATES_CONFIG.some(cfg => cfg.id === activeTemplate.id) && (
                                         <p className="text-[10px] text-orange-500/50 font-bold italic">
-                                            {language === 'cn' ? '* 系统模版作者不可修改' : '* System template author is read-only'}
+                                            {t('system_template_readonly')}
                                         </p>
                                     )}
                                 </div>
@@ -351,7 +351,7 @@ export const TemplatePreview = React.memo(({
                         ) : (
                             <div className="flex items-center gap-3 mb-3 group/title-edit">
                                 <h2 className={`text-3xl md:text-4xl font-bold tracking-tight leading-tight ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                                    {getLocalized(activeTemplate.name, language)}
+                                    {getTemplateName(activeTemplate.id, activeTemplate, language)}
                                 </h2>
                                 <button
                                     onClick={(e) => {
@@ -370,7 +370,7 @@ export const TemplatePreview = React.memo(({
                         {!isEditing && (
                             <div className="flex flex-col gap-1 mt-1 mb-3">
                                 <p className={`text-sm font-black flex items-center gap-2 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
-                                    <span className="uppercase tracking-widest text-[10px] opacity-50">{language === 'cn' ? '作者' : 'Author'}:</span>
+                                    <span className="uppercase tracking-widest text-[10px] opacity-50">{t('author')}:</span>
                                     <span className={activeTemplate.author === '官方' || !activeTemplate.author ? 'text-orange-500' : 'text-orange-500/80'}>
                                         {activeTemplate.author === '官方' ? t('official') : (activeTemplate.author || t('official'))}
                                     </span>
@@ -476,7 +476,7 @@ export const TemplatePreview = React.memo(({
                                         key={currentImageUrl}
                                         src={currentImageUrl} 
                                         referrerPolicy="no-referrer"
-                                        alt={getLocalized(activeTemplate.name, language) || "Template Preview"} 
+                                        alt={getTemplateName(activeTemplate.id, activeTemplate, language) || "Template Preview"} 
                                         className="w-full md:w-auto md:max-w-[400px] md:max-h-[400px] h-auto object-contain block animate-in fade-in duration-300" 
                                         onError={(e) => {
                                             e.target.style.display = 'none';

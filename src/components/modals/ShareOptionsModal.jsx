@@ -16,7 +16,7 @@ import { CopyIcon, Share2 } from 'lucide-react';
  * @param {boolean} props.isDarkMode - 是否暗色模式
  * @param {string} props.language - 当前语言
  */
-const ShareOptionsModal = ({ isOpen, onClose, onCopyLink, onCopyToken, shareUrl, isGenerating, isPrefetching, isDarkMode, language }) => {
+const ShareOptionsModal = ({ isOpen, onClose, onCopyLink, onCopyToken, shareUrl, isGenerating, isPrefetching, isDarkMode, language, t }) => {
   if (!isOpen) return null;
 
   return (
@@ -36,10 +36,10 @@ const ShareOptionsModal = ({ isOpen, onClose, onCopyLink, onCopyToken, shareUrl,
             <X size={20} />
           </button>
           <h3 className={`text-xl font-black mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            {language === 'cn' ? '分享模版' : 'Share Template'}
+            {t('share_template')}
           </h3>
           <p className={`text-xs font-bold mb-8 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-            {language === 'cn' ? '选择您喜欢的分享方式' : 'Choose your preferred sharing method'}
+            {t('choose_share_method')}
           </p>
 
           <div className="space-y-4">
@@ -53,10 +53,10 @@ const ShareOptionsModal = ({ isOpen, onClose, onCopyLink, onCopyToken, shareUrl,
             >
               <div className="flex flex-col items-start ml-2 text-left">
                 <span className="text-sm font-black">
-                  {isGenerating ? (language === 'cn' ? '正在复制...' : 'Copying...') : (language === 'cn' ? '链接分享' : 'Share via Link')}
+                  {isGenerating ? t('copying') : t('share_via_link')}
                 </span>
                 <span className={`text-[10px] font-bold opacity-50`}>
-                  {language === 'cn' ? '复制完整 URL 链接' : 'Copy the full URL link'}
+                  {t('copy_full_url')}
                 </span>
               </div>
             </PremiumButton>
@@ -71,10 +71,10 @@ const ShareOptionsModal = ({ isOpen, onClose, onCopyLink, onCopyToken, shareUrl,
             >
               <div className="flex flex-col items-start ml-2 text-left">
                 <span className="text-sm font-black">
-                  {isGenerating ? (language === 'cn' ? '正在生成...' : 'Generating...') : (language === 'cn' ? '口令分享 (推荐)' : 'Share via Token')}
+                  {isGenerating ? t('generating') : t('share_via_token')}
                 </span>
                 <span className={`text-[10px] font-bold opacity-70`}>
-                  {language === 'cn' ? '适合微信分享，不易被拦截' : 'Best for WeChat, anti-blocking'}
+                  {t('wechat_friendly')}
                 </span>
               </div>
             </PremiumButton>
@@ -83,11 +83,11 @@ const ShareOptionsModal = ({ isOpen, onClose, onCopyLink, onCopyToken, shareUrl,
             {(shareUrl || isPrefetching) && (
               <div className={`mt-6 p-4 rounded-2xl border ${isDarkMode ? 'bg-black/20 border-white/5' : 'bg-gray-50 border-gray-100'}`}>
                 <p className={`text-[10px] font-bold mb-2 uppercase tracking-wider ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                  {language === 'cn' ? '无法自动复制？请手动长按复制链接：' : 'CAN\'T AUTO-COPY? PLEASE LONG-PRESS TO COPY:'}
+                  {t('manual_copy_hint')}
                 </p>
                 <div className={`text-xs font-mono break-all p-3 rounded-xl border select-all max-h-[72px] overflow-y-auto scrollbar-hide ${isDarkMode ? 'bg-black/30 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-600'}`}>
                   {isPrefetching ? (
-                    <span className="opacity-50 italic">{language === 'cn' ? '短链接生成中...' : 'Generating short link...'}</span>
+                    <span className="opacity-50 italic">{t('generating_short_link')}</span>
                   ) : (
                     shareUrl
                   )}

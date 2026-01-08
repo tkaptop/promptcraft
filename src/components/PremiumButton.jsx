@@ -11,7 +11,8 @@ export const PremiumButton = ({
   icon: Icon, 
   iconSize = 16,
   isDarkMode = false,
-  justify = "center"
+  justify = "center",
+  tone = "default" // default | danger
 }) => {
   return (
     <button
@@ -30,6 +31,7 @@ export const PremiumButton = ({
     >
       <div className={`
         premium-button-inner 
+        tone-${tone}
         ${isDarkMode ? 'dark' : 'light'} 
         ${active ? 'is-active' : ''}
         ${className.includes('size-lg') ? 'size-lg' : ''}

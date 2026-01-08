@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
+import {
   ImageIcon, ArrowUpRight
 } from 'lucide-react';
-import { getLocalized } from '../utils/helpers';
+import { getTemplateName } from '../utils/i18n';
 import { Sidebar } from './Sidebar';
 import { FireworkEffect } from './FireworkEffect';
 import { FEATURE_FLAGS } from '../constants/featureFlags';
@@ -122,9 +122,9 @@ export const DiscoveryView = React.memo(({
               >
                 <div className="relative w-full bg-gray-50/5">
                   {t_item.imageUrl ? (
-                    <img 
-                      src={t_item.imageUrl} 
-                      alt={getLocalized(t_item.name, language)} 
+                    <img
+                      src={t_item.imageUrl}
+                      alt={getTemplateName(t_item.id, t_item, language)} 
                       className="w-full h-auto block"
                       referrerPolicy="no-referrer"
                       loading="lazy"
@@ -136,7 +136,7 @@ export const DiscoveryView = React.memo(({
                   )}
                   {/* Title Overlay */}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2 pt-6 rounded-b-lg">
-                    <h3 className="text-white font-bold text-[10px] truncate">{getLocalized(t_item.name, language)}</h3>
+                    <h3 className="text-white font-bold text-[10px] truncate">{getTemplateName(t_item.id, t_item, language)}</h3>
                   </div>
                 </div>
               </article>
@@ -284,9 +284,9 @@ export const DiscoveryView = React.memo(({
                                           >
                                               <div className={`relative w-full overflow-hidden rounded-lg ${isDarkMode ? 'bg-[#2A2726]' : 'bg-gray-100'}`} style={{ transform: 'translateZ(0)' }}>
                                                   {t_item.imageUrl ? (
-                                                      <img 
-                                                          src={t_item.imageUrl} 
-                                                          alt={getLocalized(t_item.name, language)} 
+                                                      <img
+                                                          src={t_item.imageUrl}
+                                                          alt={getTemplateName(t_item.id, t_item, language)} 
                                                           className="w-full h-auto object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                                                           referrerPolicy="no-referrer"
                                                           loading="lazy"
@@ -301,7 +301,7 @@ export const DiscoveryView = React.memo(({
                                               <div className="absolute inset-x-0 bottom-0 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-[opacity,transform] duration-500 ease-out z-20 rounded-b-xl overflow-hidden">
                                                   <div className={`backdrop-blur-md border-t py-4 px-6 shadow-2xl rounded-b-xl ${isDarkMode ? 'bg-black/60 border-white/10' : 'bg-white/40 border-white/40'}`}>
                                                       <h3 className={`font-bold text-base leading-snug text-center ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-                                                          {getLocalized(t_item.name, language)}
+                                                          {getTemplateName(t_item.id, t_item, language)}
                                                       </h3>
                                                   </div>
                                               </div>

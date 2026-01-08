@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Settings, List, Check, ChevronRight, ChevronDown, Plus, Trash2, X, ChevronUp, Pencil, Search } from 'lucide-react';
 import { CATEGORY_STYLES, PREMIUM_STYLES } from '../constants/styles';
-import { getLocalized } from '../utils/helpers';
+import { getLocalized, getBankLabel, getBankOption, getCategoryLabel } from '../utils/i18n';
 
 import { PremiumButton } from './PremiumButton';
 
@@ -17,16 +17,16 @@ const CategorySection = ({ catId, categories, banks, onInsert, onDeleteOption, o
   const catBanks = Object.entries(banks).filter(([key, bank]) => {
     const isInCategory = (bank.category || 'other') === catId;
     if (!isInCategory) return false;
-    
+
     if (!bankSearchQuery) return true;
-    
+
     const query = bankSearchQuery.toLowerCase();
-    const bankLabel = getLocalized(bank.label, language).toLowerCase();
+    const bankLabel = getBankLabel(key, bank, language).toLowerCase();
     const matchesBankName = bankLabel.includes(query) || key.toLowerCase().includes(query);
-    const matchesOptions = bank.options.some(opt => 
+    const matchesOptions = bank.options.some(opt =>
       getLocalized(opt, language).toLowerCase().includes(query)
     );
-    
+
     return matchesBankName || matchesOptions;
   });
   
@@ -46,7 +46,7 @@ const CategorySection = ({ catId, categories, banks, onInsert, onDeleteOption, o
             </div>
             <h3 className={`text-[11px] font-black uppercase tracking-[0.2em] flex items-center gap-3 flex-1 transition-colors ${isDarkMode ? 'text-gray-600 group-hover:text-gray-400' : 'text-gray-400 group-hover:text-gray-600'}`}>
                 <span className={`w-1.5 h-1.5 rounded-full ${style.dotBg} opacity-60`}></span>
-                {getLocalized(category.label, language)}
+                {getCategoryLabel(catId, category, language)}
                 <span className="ml-auto tabular-nums opacity-40 font-bold">
                     {catBanks.length}
                 </span>
@@ -123,14 +123,14 @@ const BankGroup = ({ bankKey, bank, onInsert, onDeleteOption, onAddOption, onUpd
         return;
     };
 
-    // 过滤选项
-    const filteredOptions = bank.options.filter(opt => {
+    // 过滤选项，保留原始索引
+    const filteredOptions = bank.options.map((opt, idx) => ({ opt, originalIdx: idx })).filter(({ opt, originalIdx }) => {
         if (!bankSearchQuery) return true;
         const query = bankSearchQuery.toLowerCase();
         // 如果词库名称已经匹配，则显示所有选项；否则只显示匹配的选项
-        const bankLabel = getLocalized(bank.label, language).toLowerCase();
+        const bankLabel = getBankLabel(bankKey, bank, language).toLowerCase();
         if (bankLabel.includes(query) || bankKey.toLowerCase().includes(query)) return true;
-        return getLocalized(opt, language).toLowerCase().includes(query);
+        return getBankOption(bankKey, originalIdx, opt, language).toLowerCase().includes(query);
     });
 
     return (
@@ -181,7 +181,7 @@ const BankGroup = ({ bankKey, bank, onInsert, onDeleteOption, onAddOption, onUpd
                         </div>
                         <div className="flex flex-col min-w-0">
                             <span className={`text-[14px] font-bold truncate tracking-tight leading-tight transition-colors ${isDarkMode ? 'text-gray-300 group-hover/card:text-white' : 'text-gray-800 group-hover/card:text-gray-900'}`}>
-                                {getLocalized(bank.label, language)}
+                                {getBankLabel(bankKey, bank, language)}
                             </span>
                             <code className="text-[11px] font-black tracking-wider mt-0.5 opacity-60" style={{ color: premium.to }}>{`{{${bankKey}}}`}</code>
                         </div>
@@ -238,19 +238,19 @@ const BankGroup = ({ bankKey, bank, onInsert, onDeleteOption, onAddOption, onUpd
                                     onClick={(e) => e.stopPropagation()}
                                 >
                                     {Object.values(categories).map(cat => (
-                                        <option key={cat.id} value={cat.id}>{getLocalized(cat.label, language)}</option>
+                                        <option key={cat.id} value={cat.id}>{getCategoryLabel(cat.id, cat, language)}</option>
                                     ))}
                                 </select>
                             </div>
                         )}
 
                         <div className="flex flex-col gap-1.5 mb-4">
-                            {filteredOptions.map((opt, idx) => {
-                                const isEditing = editingOptionIdx === idx;
-                                const optLabel = getLocalized(opt, language);
+                            {filteredOptions.map(({ opt, originalIdx }, idx) => {
+                                const isEditing = editingOptionIdx === originalIdx;
+                                const optLabel = getBankOption(bankKey, originalIdx, opt, language);
 
                                 return (
-                                    <div key={idx} className={`group/opt flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl text-[14px] font-semibold transition-all duration-200 ${isDarkMode ? 'bg-transparent hover:bg-white/5 text-gray-400 hover:text-gray-200' : 'bg-transparent hover:bg-white/60 text-gray-700 hover:text-gray-900'} ${isEditing ? (isDarkMode ? 'bg-white/5 ring-1 ring-orange-500/50' : 'bg-white ring-1 ring-orange-500/30 shadow-sm') : ''}`}>
+                                    <div key={originalIdx} className={`group/opt flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl text-[14px] font-semibold transition-all duration-200 ${isDarkMode ? 'bg-transparent hover:bg-white/5 text-gray-400 hover:text-gray-200' : 'bg-transparent hover:bg-white/60 text-gray-700 hover:text-gray-900'} ${isEditing ? (isDarkMode ? 'bg-white/5 ring-1 ring-orange-500/50' : 'bg-white ring-1 ring-orange-500/30 shadow-sm') : ''}`}>
                                         {isEditing ? (
                                             <input
                                                 autoFocus
@@ -278,13 +278,13 @@ const BankGroup = ({ bankKey, bank, onInsert, onDeleteOption, onAddOption, onUpd
                                         ) : (
                                             <span className="truncate select-text flex-1 py-1" title={optLabel}>{optLabel}</span>
                                         )}
-                                        
+
                                         <div className="flex items-center gap-1">
                                             {!isEditing && (
-                                                <button 
+                                                <button
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        setEditingOptionIdx(idx);
+                                                        setEditingOptionIdx(originalIdx);
                                                         setTempOptionVal(optLabel);
                                                     }}
                                                     className="opacity-0 group-hover/opt:opacity-100 text-gray-400 hover:text-orange-500 p-1.5 rounded-lg transition-all flex-shrink-0"
@@ -293,7 +293,7 @@ const BankGroup = ({ bankKey, bank, onInsert, onDeleteOption, onAddOption, onUpd
                                                     <Pencil size={13} />
                                                 </button>
                                             )}
-                                            <button 
+                                            <button
                                                 onClick={() => onDeleteOption(bankKey, opt)}
                                                 className="opacity-0 group-hover/opt:opacity-100 text-gray-400 hover:text-red-500 p-1.5 rounded-lg transition-all flex-shrink-0"
                                                 title={t('delete')}
@@ -363,8 +363,8 @@ export const CategoryManager = ({ isOpen, onClose, categories, setCategories, ba
 
   const handleDeleteCategory = (catId) => {
     if (catId === 'other') return; // Cannot delete default
-    
-    const catName = getLocalized(categories[catId].label, language);
+
+    const catName = getCategoryLabel(catId, categories[catId], language);
     if (window.confirm(t('delete_category_confirm', { name: catName }))) {
        // 1. Update banks to use 'other'
        const updatedBanks = { ...banks };
@@ -384,7 +384,7 @@ export const CategoryManager = ({ isOpen, onClose, categories, setCategories, ba
 
   const startEditing = (cat) => {
       setEditingCatId(cat.id);
-      setTempCatName(getLocalized(cat.label, language));
+      setTempCatName(getCategoryLabel(cat.id, cat, language));
   };
 
   const saveEditing = () => {
@@ -458,7 +458,7 @@ export const CategoryManager = ({ isOpen, onClose, categories, setCategories, ba
                         className={`flex-1 text-sm border rounded px-1 py-0.5 outline-none ${isDarkMode ? 'bg-black/40 border-orange-500 text-white' : 'border-orange-300'}`}
                       />
                   ) : (
-                      <span className={`flex-1 text-sm font-medium truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{getLocalized(cat.label, language)}</span>
+                      <span className={`flex-1 text-sm font-medium truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{getCategoryLabel(cat.id, cat, language)}</span>
                   )}
 
                   <div className="flex items-center gap-1">
@@ -519,7 +519,7 @@ export const InsertVariableModal = ({ isOpen, onClose, categories, banks, onSele
                    <div key={catId}>
                        <h4 className={`text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5 sticky top-0 py-1 z-10 ${style.text} ${isDarkMode ? 'bg-[#242120]' : 'bg-white'}`}>
                            <span className={`w-1.5 h-1.5 rounded-full ${style.dotBg}`}></span>
-                           {getLocalized(category.label, language)}
+                           {getCategoryLabel(catId, category, language)}
                        </h4>
                        <div className="grid grid-cols-1 gap-2">
                            {catBanks.map(([key, bank]) => (
@@ -532,7 +532,7 @@ export const InsertVariableModal = ({ isOpen, onClose, categories, banks, onSele
                                    `}
                                >
                                    <div>
-                                       <span className={`block text-sm font-medium transition-colors ${isDarkMode ? 'text-gray-300 group-hover:text-orange-400' : 'text-gray-700 group-hover:text-orange-700'}`}>{getLocalized(bank.label, language)}</span>
+                                       <span className={`block text-sm font-medium transition-colors ${isDarkMode ? 'text-gray-300 group-hover:text-orange-400' : 'text-gray-700 group-hover:text-orange-700'}`}>{getBankLabel(key, bank, language)}</span>
                                        <code className={`text-[10px] font-mono transition-colors ${isDarkMode ? 'text-gray-600 group-hover:text-orange-400/60' : 'text-gray-400 group-hover:text-orange-400'}`}>{`{{${key}}}`}</code>
                                    </div>
                                    <Plus size={16} className={`transition-colors ${isDarkMode ? 'text-gray-700 group-hover:text-orange-500' : 'text-gray-300 group-hover:text-orange-500'}`} />
@@ -603,7 +603,7 @@ export const AddBankModal = ({ isOpen, onClose, t, categories, newBankLabel, set
                             className={`w-full text-sm border rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-200 focus:border-orange-500 outline-none transition-all appearance-none ${isDarkMode ? 'bg-[#2A2726] border-white/10 text-gray-300' : 'border-gray-200 bg-gray-50/50 text-gray-700'}`}
                         >
                             {Object.values(categories).map(cat => (
-                                <option key={cat.id} value={cat.id}>{getLocalized(cat.label, language)}</option>
+                                <option key={cat.id} value={cat.id}>{getCategoryLabel(cat.id, cat, language)}</option>
                             ))}
                         </select>
                     </div>

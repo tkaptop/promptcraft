@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  Globe, Database, Download, Upload, 
-  Trash2, Mail, MessageCircle, Github, 
-  ChevronRight, RefreshCw, FolderOpen, X, Heart
+import {
+  Globe, Database, Download, Upload,
+  Trash2, Mail, MessageCircle, Github,
+  ChevronRight, RefreshCw, FolderOpen, X, Heart, ChevronDown
 } from 'lucide-react';
+import { SUPPORTED_LANGUAGES } from '../constants/translations';
 
 export const SettingsView = ({ 
   language, setLanguage, 
@@ -385,7 +386,7 @@ export const SettingsView = ({
       <div className="px-10 pt-12 pb-6 flex-shrink-0 flex items-end">
         <div className="w-[35%] pr-10">
           <h1 className={`text-3xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            {language === 'cn' ? '设置' : 'Settings'}
+            {t('settings')}
           </h1>
           <div className="flex items-center gap-3 mt-1">
             <span className={`text-[9px] font-black tracking-[0.1em] uppercase ${isDarkMode ? 'text-gray-600' : 'text-gray-500'}`}>
@@ -399,7 +400,7 @@ export const SettingsView = ({
         </div>
         <div className="flex-1 ml-20">
           <h2 className={`text-3xl font-black tracking-tight flex items-center gap-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
-             {language === 'cn' ? '更新日志' : 'Latest Updates'}
+             {t('latest_updates')}
           </h2>
         </div>
       </div>
@@ -410,22 +411,36 @@ export const SettingsView = ({
         {/* Left: Settings Area (35%) */}
         <div className="w-[35%] overflow-y-auto custom-scrollbar pr-10 flex flex-col">
           <div className="flex-1">
-            <SettingSection title={language === 'cn' ? '基础偏好' : 'Preferences'}>
-              <SettingItem 
-                icon={Globe} 
-                label={language === 'cn' ? '界面语言' : 'Language'} 
-                value={language === 'cn' ? 'CN' : 'EN'} 
-                onClick={() => setLanguage(language === 'cn' ? 'en' : 'cn')}
-              />
+            <SettingSection title={t('preferences')}>
+              <div className="flex items-center gap-2 p-2.5">
+                <div className={`flex-shrink-0 transition-colors duration-200 ${isDarkMode ? 'text-gray-600' : 'text-gray-500'}`}>
+                  <Globe size={16} strokeWidth={2} />
+                </div>
+                <span className={`text-[12px] font-bold tracking-tight shrink-0 ${isDarkMode ? 'text-gray-400' : 'text-gray-800'}`}>
+                  {t('language')}
+                </span>
+                <div className="ml-auto relative">
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    className={`appearance-none text-[11px] font-bold px-3 py-1.5 pr-7 rounded-lg cursor-pointer transition-colors ${isDarkMode ? 'bg-white/10 text-gray-300 hover:bg-white/15' : 'bg-orange-50 text-gray-700 hover:bg-orange-100'}`}
+                  >
+                    {Object.entries(SUPPORTED_LANGUAGES).map(([code, lang]) => (
+                      <option key={code} value={code}>{lang.nativeName}</option>
+                    ))}
+                  </select>
+                  <ChevronDown size={12} className={`absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                </div>
+              </div>
               <div className="flex items-center gap-2 p-2.5">
                 <span className={`text-[12px] font-bold tracking-tight shrink-0 ${isDarkMode ? 'text-gray-400' : 'text-gray-800'}`}>
-                  {language === 'cn' ? '外观模式' : 'Appearance'}
+                  {t('appearance')}
                 </span>
                 <div className={`premium-toggle-container ${isDarkMode ? 'dark' : 'light'} ml-auto scale-[0.85] origin-right`}>
                   {[
-                    { id: 'light', label: language === 'cn' ? '亮色' : 'Light' },
-                    { id: 'dark', label: language === 'cn' ? '暗色' : 'Dark' },
-                    { id: 'system', label: language === 'cn' ? '自动' : 'Auto' }
+                    { id: 'light', label: t('theme_light') },
+                    { id: 'dark', label: t('theme_dark') },
+                    { id: 'system', label: t('theme_auto') }
                   ].map(mode => (
                     <button
                       key={mode.id}
@@ -439,12 +454,12 @@ export const SettingsView = ({
               </div>
             </SettingSection>
 
-            <SettingSection title={language === 'cn' ? '数据存储' : 'Storage'}>
+            <SettingSection title={t('storage')}>
               <div className="flex flex-col gap-1">
-                <SettingItem 
-                  icon={Database} 
-                  label={language === 'cn' ? '浏览器存储' : 'Browser'} 
-                  description={language === 'cn' ? '使用 IndexedDB 模式 (无限容量)' : 'IndexedDB Mode (Unlimited)'}
+                <SettingItem
+                  icon={Database}
+                  label={t('browser_storage')}
+                  description={t('indexeddb_mode')}
                   active={storageMode === 'browser'}
                   onClick={handleSwitchToLocalStorage}
                 />
@@ -452,7 +467,7 @@ export const SettingsView = ({
                   <div className="px-3 mb-2">
                     <div className="flex justify-between items-center mb-1">
                       <span className={`text-[9px] font-bold ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
-                        {language === 'cn' ? '存储空间已用' : 'Storage Used'}
+                        {t('storage_used')}
                       </span>
                       <span className={`text-[9px] font-bold ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
                         {(storageStats.usage / 1024 / 1024).toFixed(1)}MB / {(storageStats.quota / 1024 / 1024 / 1024).toFixed(1)}GB
@@ -467,66 +482,66 @@ export const SettingsView = ({
                   </div>
                 )}
                 
-                <SettingItem 
-                  icon={FolderOpen} 
-                  label={language === 'cn' ? '本地文件夹' : 'Local Folder'} 
-                  description={storageMode === 'folder' && directoryHandle ? `路径: /${directoryHandle.name}` : (language === 'cn' ? '自动保存到本地文件夹' : 'Auto-save to local folder')}
+                <SettingItem
+                  icon={FolderOpen}
+                  label={t('local_folder')}
+                  description={storageMode === 'folder' && directoryHandle ? `${t('local_folder')}: /${directoryHandle.name}` : t('auto_save_to_folder')}
                   active={storageMode === 'folder'}
                   onClick={handleSelectDirectory}
                 />
               </div>
             </SettingSection>
 
-            <SettingSection title={language === 'cn' ? '模版管理' : 'Templates'}>
+            <SettingSection title={t('templates')}>
               <div className="relative group">
                 <label className="cursor-pointer">
                   <input type="file" accept=".json" onChange={handleImportTemplate} className="hidden" />
                   <div className={`group flex items-center justify-between p-2.5 rounded-xl transition-all duration-200 ${isDarkMode ? 'hover:bg-white/5' : 'hover:bg-orange-500/5'}`}>
                     <div className="flex items-center gap-3 min-w-0">
                       <Download size={16} className={`transition-colors flex-shrink-0 ${isDarkMode ? 'text-gray-600 group-hover:text-orange-400' : 'text-gray-500 group-hover:text-orange-500'}`} />
-                      <span className={`text-[12px] font-bold truncate ${isDarkMode ? 'text-gray-400 group-hover:text-gray-200' : 'text-gray-700'}`}>{language === 'cn' ? '导入 JSON' : 'Import JSON'}</span>
+                      <span className={`text-[12px] font-bold truncate ${isDarkMode ? 'text-gray-400 group-hover:text-gray-200' : 'text-gray-700'}`}>{t('import_json')}</span>
                     </div>
                     <ChevronRight size={12} className="text-gray-300 group-hover:text-orange-300 flex-shrink-0" />
                   </div>
                 </label>
               </div>
-              <SettingItem 
-                icon={Upload} 
-                label={language === 'cn' ? '全量导出' : 'Export All'} 
-                onClick={handleExportAllTemplates} 
+              <SettingItem
+                icon={Upload}
+                label={t('export_all')}
+                onClick={handleExportAllTemplates}
               />
-              <SettingItem 
-                icon={RefreshCw} 
-                label={language === 'cn' ? '重置预设' : 'Reset System'} 
-                onClick={handleResetSystemData} 
+              <SettingItem
+                icon={RefreshCw}
+                label={t('reset_system')}
+                onClick={handleResetSystemData}
               />
-              <SettingItem 
-                icon={Trash2} 
-                label={language === 'cn' ? '清空数据' : 'Clear All'} 
+              <SettingItem
+                icon={Trash2}
+                label={t('clear_all')}
                 danger={true}
-                onClick={handleClearAllData} 
+                onClick={handleClearAllData}
               />
             </SettingSection>
 
-            <SettingSection title={language === 'cn' ? '关于与支持' : 'About'}>
-              <SettingItem 
-                icon={Heart} 
-                label={language === 'cn' ? '鸣谢' : 'Credits'} 
+            <SettingSection title={t('about')}>
+              <SettingItem
+                icon={Heart}
+                label={t('credits')}
                 onClick={() => setShowCredits(true)}
               />
-              <SettingItem 
-                icon={Mail} 
-                label={language === 'cn' ? '反馈邮箱' : 'Feedback'} 
+              <SettingItem
+                icon={Mail}
+                label={t('feedback_email')}
                 onClick={() => window.location.href = 'mailto:tanshilong@gmail.com'}
               />
-              <SettingItem 
-                icon={MessageCircle} 
-                label={language === 'cn' ? '作者微信' : 'WeChat'} 
+              <SettingItem
+                icon={MessageCircle}
+                label={t('wechat')}
                 onClick={() => setShowWechatQR(true)}
               />
-              <SettingItem 
-                icon={Github} 
-                label="GitHub Open Source" 
+              <SettingItem
+                icon={Github}
+                label="GitHub Open Source"
                 onClick={() => window.open('https://github.com/tkaptop/promptcraft', '_blank')}
               />
             </SettingSection>
@@ -535,9 +550,7 @@ export const SettingsView = ({
           {/* Manifesto Text */}
           <div className="mt-8 px-1">
             <p className="text-[12px] font-black text-orange-600 leading-relaxed">
-              {language === 'cn' 
-                ? 'Prompt Fill 为创作者而生。所有数据均保存在本地，我们不会上传您的任何提示词内容。' 
-                : 'Built for creators. All data stays local; we never upload your prompts.'}
+              {t('manifesto_text')}
             </p>
           </div>
         </div>
@@ -568,7 +581,7 @@ export const SettingsView = ({
                   <h3 className={`text-lg font-black tracking-tight ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}>{log.title}</h3>
                   {idx === 0 && (
                     <span className="px-1.5 py-0.5 text-[8px] font-black bg-orange-500 text-white rounded uppercase tracking-wider">
-                      {language === 'cn' ? '最新' : 'LATEST'}
+                      {t('latest')}
                     </span>
                   )}
                 </div>
@@ -643,41 +656,20 @@ export const SettingsView = ({
               </div>
               
               <h3 className={`text-2xl font-black mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                {language === 'cn' ? '鸣谢与致敬' : 'Credits & Acknowledgments'}
+                {t('credits_title')}
               </h3>
-              
+
               <div className={`space-y-6 text-sm leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 <p className="font-bold text-orange-600">
-                  {language === 'cn' 
-                    ? '本项目为开源项目，旨在提升 AI 创作者的工作流效率。' 
-                    : 'This is an open-source project aimed at improving AI creator workflows.'}
+                  {t('credits_based_on')}
                 </p>
-                
+
                 <p>
-                  {language === 'cn' 
-                    ? '特别感谢为提示词提供灵感的作者：' 
-                    : 'Special thanks to authors who provided prompt inspirations:'}
+                  {t('credits_thanks')}
                   <br />
                   <span className={`font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
-                    宝玉(@dotey), MarioTan(@tanshilong), sundyme, Berryxia.AI, sidona, AmirMushich, Latte(@0xbisc), 阿兹特克小羊驼(@AztecaAlpaca)
+                    TanShilongMario (@tanshilong)
                   </span>
-                </p>
-                
-                <p>
-                  {language === 'cn' 
-                    ? '以及在项目初期给予大力支持的' 
-                    : 'And early support from '}
-                  <span className={`font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>松果先森</span>
-                  {language === 'cn' ? '，以及所有提供建议、Bug 发现及提交 Issue 的小伙伴们。' : ', and all contributors who provided suggestions and bug reports.'}
-                </p>
-                
-                <div className={`h-px w-12 mx-auto my-6 ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'}`} />
-                
-                <p className="italic">
-                  {language === 'cn' 
-                    ? '最终感谢我的挚爱，我的女神，感谢她能够忍受我在半夜敲键盘的声音，并给予我一路的陪伴和支持。' 
-                    : 'Final thanks to my beloved, my goddess, for enduring my late-night typing and for her constant support.'}
-                  <Heart size={12} className="inline ml-1 text-red-500 fill-red-500" />
                 </p>
               </div>
             </div>

@@ -16,7 +16,7 @@ import { PremiumButton } from '../PremiumButton';
  * @param {string} props.language - 当前语言
  * @param {string} props.confirmText - 确认按钮文字
  */
-const ImportTokenModal = ({ isOpen, onClose, tokenValue, onTokenChange, onConfirm, isDarkMode, language, confirmText }) => {
+const ImportTokenModal = ({ isOpen, onClose, tokenValue, onTokenChange, onConfirm, isDarkMode, language, confirmText, t }) => {
   if (!isOpen) return null;
 
   const handleClose = () => {
@@ -51,10 +51,10 @@ const ImportTokenModal = ({ isOpen, onClose, tokenValue, onTokenChange, onConfir
             <X size={20} />
           </button>
           <h3 className={`text-xl font-black mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            {language === 'cn' ? '导入模版' : 'Import Template'}
+            {t('import_template')}
           </h3>
           <p className={`text-xs font-bold mb-6 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-            {language === 'cn' ? '请输入分享口令或链接' : 'Please enter share token or link'}
+            {t('enter_share_token')}
           </p>
 
           <div className="space-y-4">
@@ -64,7 +64,7 @@ const ImportTokenModal = ({ isOpen, onClose, tokenValue, onTokenChange, onConfir
                 type="text"
                 value={tokenValue}
                 onChange={(e) => onTokenChange(e.target.value)}
-                placeholder={language === 'cn' ? '粘贴口令或链接...' : 'Paste token or link...'}
+                placeholder={t('paste_token')}
                 className={`w-full px-5 py-4 text-sm font-semibold rounded-2xl transition-all duration-300 border-2 outline-none ${
                   isDarkMode
                     ? 'bg-black/20 border-white/10 text-white focus:border-orange-500/50'

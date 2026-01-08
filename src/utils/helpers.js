@@ -211,10 +211,98 @@ export const makeUniqueKey = (base, existingKeys, suffix = "custom") => {
 };
 
 // 获取本地化文本
-export const getLocalized = (obj, language) => {
+// 支持两种模式：
+// 1. 传统模式：obj 是 {cn: "中文", en: "English"} 格式
+// 2. 翻译键模式：obj 是 {_key: "bank_role_label"} 格式，从 translations 中查找
+export const getLocalized = (obj, language, translations = null) => {
   if (!obj) return "";
   if (typeof obj === 'string') return obj;
+
+  // 如果有 _key 属性，从 translations 中查找
+  if (obj._key && translations) {
+    const translated = translations[language]?.[obj._key] || translations.en?.[obj._key];
+    if (translated) return translated;
+  }
+
+  // 传统模式：直接从对象中获取对应语言的值
   return obj[language] || obj.cn || obj.en || "";
+};
+
+// 获取 bank label 的本地化文本
+// bankId: 词库 ID (如 "role")
+// bankData: 词库数据对象 (包含 label 属性)
+// language: 当前语言
+// translations: 翻译数据对象
+export const getBankLabel = (bankId, bankData, language, translations = null) => {
+  if (!bankData?.label) return bankId;
+
+  // 优先从 translations 中查找
+  if (translations) {
+    const key = `bank_${bankId}_label`;
+    const translated = translations[language]?.[key] || translations.en?.[key];
+    if (translated) return translated;
+  }
+
+  // 回退到传统模式
+  return getLocalized(bankData.label, language);
+};
+
+// 获取 bank option 的本地化文本
+// bankId: 词库 ID (如 "role")
+// optionIndex: 选项索引
+// optionData: 选项数据 (可能是字符串或 {cn, en} 对象)
+// language: 当前语言
+// translations: 翻译数据对象
+export const getBankOption = (bankId, optionIndex, optionData, language, translations = null) => {
+  if (!optionData) return "";
+
+  // 优先从 translations 中查找
+  if (translations) {
+    const key = `bank_${bankId}_opt_${optionIndex}`;
+    const translated = translations[language]?.[key] || translations.en?.[key];
+    if (translated) return translated;
+  }
+
+  // 回退到传统模式
+  return getLocalized(optionData, language);
+};
+
+// 获取 template name 的本地化文本
+// templateId: 模版 ID (如 "tpl_default")
+// templateData: 模版数据对象 (包含 name 属性)
+// language: 当前语言
+// translations: 翻译数据对象
+export const getTemplateName = (templateId, templateData, language, translations = null) => {
+  if (!templateData?.name) return templateId;
+
+  // 优先从 translations 中查找
+  if (translations) {
+    const key = `tpl_${templateId}_name`;
+    const translated = translations[language]?.[key] || translations.en?.[key];
+    if (translated) return translated;
+  }
+
+  // 回退到传统模式
+  return getLocalized(templateData.name, language);
+};
+
+// 获取 category label 的本地化文本
+// categoryId: 分类 ID (如 "character")
+// categoryData: 分类数据对象 (包含 label 属性)
+// language: 当前语言
+// translations: 翻译数据对象
+export const getCategoryLabel = (categoryId, categoryData, language, translations = null) => {
+  if (!categoryData?.label) return categoryId;
+
+  // 优先从 translations 中查找
+  if (translations) {
+    const key = `cat_${categoryId}_label`;
+    const translated = translations[language]?.[key] || translations.en?.[key];
+    if (translated) return translated;
+  }
+
+  // 回退到传统模式
+  return getLocalized(categoryData.label, language);
 };
 
 // 获取系统语言 (非中文环境默认返回 en)

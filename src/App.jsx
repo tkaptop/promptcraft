@@ -13,7 +13,8 @@ import { PREMIUM_STYLES, CATEGORY_STYLES, TAG_STYLES, TAG_LABELS } from './const
 import { MASONRY_STYLES } from './constants/masonryStyles';
 
 // ====== 导入工具函数 ======
-import { deepClone, makeUniqueKey, waitForImageLoad, getLocalized, getSystemLanguage, compressTemplate, decompressTemplate, copyToClipboard, saveDirectoryHandle } from './utils';
+import { deepClone, makeUniqueKey, waitForImageLoad, getSystemLanguage, compressTemplate, decompressTemplate, copyToClipboard, saveDirectoryHandle } from './utils';
+import { getLocalized, getTemplateName, getBankLabel } from './utils/i18n';
 import { mergeTemplatesWithSystem, mergeBanksWithSystem } from './utils/merge';
 import { generateAITerms } from './utils/aiService';  // AI 服务
 
@@ -331,7 +332,7 @@ const App = () => {
   // 当在编辑模式下切换模板或语言时，同步更新标题和作者的临时状态
   useEffect(() => {
     if (isEditing && activeTemplate) {
-      setTempTemplateName(getLocalized(activeTemplate.name, language));
+      setTempTemplateName(getTemplateName(activeTemplate.id, activeTemplate, language));
       setTempTemplateAuthor(activeTemplate.author || "");
       setEditingTemplateNameId(activeTemplate.id);
     }
@@ -339,7 +340,7 @@ const App = () => {
 
   // Helper: Translate
   const t = (key, params = {}) => {
-    let str = TRANSLATIONS[language][key] || key;
+    let str = TRANSLATIONS[language]?.[key] || TRANSLATIONS.en?.[key] || key;
     Object.keys(params).forEach(k => {
         str = str.replace(`{{${k}}}`, params[k]);
     });
@@ -466,30 +467,37 @@ const App = () => {
       }
   }, [isCategoriesLoaded]);
 
-  // Ensure all templates have tags field and sync default templates' tags (migration safety)
+  // Ensure all templates have tags field and sync default templates' tags and hot property (migration safety)
   useEffect(() => {
     if (!isTemplatesLoaded) return;
-    
+
     let needsUpdate = false;
     const updatedTemplates = templates.map(t => {
       // Find if this is a default template
       const defaultTemplate = INITIAL_TEMPLATES_CONFIG.find(dt => dt.id === t.id);
-      
+
       if (defaultTemplate) {
+        let updated = { ...t };
         // Sync tags from default template if it's a built-in one
         if (JSON.stringify(t.tags) !== JSON.stringify(defaultTemplate.tags)) {
           needsUpdate = true;
-          return { ...t, tags: defaultTemplate.tags || [] };
+          updated.tags = defaultTemplate.tags || [];
         }
+        // Sync hot property from default template
+        if (t.hot !== defaultTemplate.hot) {
+          needsUpdate = true;
+          updated.hot = defaultTemplate.hot;
+        }
+        return updated;
       } else if (!t.tags) {
         // User-created template without tags
         needsUpdate = true;
         return { ...t, tags: [] };
       }
-      
+
       return t;
     });
-    
+
     if (needsUpdate) {
       setTemplates(updatedTemplates);
     }
@@ -552,7 +560,7 @@ const App = () => {
   useEffect(() => {
     if (activeTemplate && typeof window !== 'undefined') {
       try {
-        const templateName = getLocalized(activeTemplate.name, language);
+        const templateName = getTemplateName(activeTemplate.id, activeTemplate, language);
         if (templateName) {
           const siteTitle = "Prompt Fill | 提示词填空器";
           document.title = `${templateName} - ${siteTitle}`;
@@ -1064,8 +1072,8 @@ const App = () => {
   const baseFilteredTemplates = React.useMemo(() => {
     return templates.filter(t => {
       // Search filter
-      const templateName = getLocalized(t.name, language);
-      const matchesSearch = !searchQuery || 
+      const templateName = getTemplateName(t.id, t, language);
+      const matchesSearch = !searchQuery ||
         templateName.toLowerCase().includes(searchQuery.toLowerCase());
       
       // 语言过滤：如果模板指定了语言，且不包含当前语言，则隐藏
@@ -1079,8 +1087,12 @@ const App = () => {
   // Discovery View templates (ignore tags, but respect search, language and sort)
   const discoveryTemplates = React.useMemo(() => {
     return [...baseFilteredTemplates].sort((a, b) => {
-      const nameA = getLocalized(a.name, language);
-      const nameB = getLocalized(b.name, language);
+      // Hot templates always come first
+      if (a.hot && !b.hot) return -1;
+      if (!a.hot && b.hot) return 1;
+
+      const nameA = getTemplateName(a.id, a, language);
+      const nameB = getTemplateName(b.id, b, language);
       switch(sortOrder) {
         case 'newest':
           return templates.indexOf(b) - templates.indexOf(a);
@@ -1240,7 +1252,7 @@ const App = () => {
   // --- 导出/导入功能 ---
   const handleExportTemplate = async (template) => {
       try {
-          const templateName = getLocalized(template.name, language);
+          const templateName = getTemplateName(template.id, template, language);
           const dataStr = JSON.stringify(template, null, 2);
           const dataBlob = new Blob([dataStr], { type: 'application/json' });
           const filename = `${templateName.replace(/\s+/g, '_')}_template.json`;
@@ -1601,7 +1613,7 @@ const App = () => {
   };
 
   const handleDeleteBank = (key) => {
-    const bankLabel = getLocalized(banks[key].label, language);
+    const bankLabel = getBankLabel(key, banks[key], language);
     if (window.confirm(t('confirm_delete_bank', { name: bankLabel }))) {
       const newBanks = { ...banks };
       delete newBanks[key];
@@ -1687,30 +1699,34 @@ const App = () => {
     }, 0);
   };
 
-  const handleCopy = () => {
-    // 获取当前模板语言的内容
+  const getGeneratedPromptText = React.useCallback(() => {
+    if (!activeTemplate?.content) return "";
+
     let finalString = getLocalized(activeTemplate.content, templateLanguage);
     const counters = {};
 
     finalString = finalString.replace(/{{(.*?)}}/g, (match, key) => {
-        const fullKey = key.trim();
-        const parsed = parseVariableName(fullKey);
-        const baseKey = parsed.baseKey;
-        
-        // 使用完整的 fullKey 作为计数器的 key
-        const idx = counters[fullKey] || 0;
-        counters[fullKey] = idx + 1;
+      const fullKey = key.trim();
+      const parsed = parseVariableName(fullKey);
+      const baseKey = parsed.baseKey;
 
-        const uniqueKey = `${fullKey}-${idx}`;
-        // Prioritize selection, then default (use baseKey for defaults), and get localized value
-        const value = activeTemplate.selections[uniqueKey] || defaults[baseKey];
-        return getLocalized(value, templateLanguage) || match;
+      const idx = counters[fullKey] || 0;
+      counters[fullKey] = idx + 1;
+
+      const uniqueKey = `${fullKey}-${idx}`;
+      const value = activeTemplate.selections?.[uniqueKey] || defaults[baseKey];
+      return getLocalized(value, templateLanguage) || match;
     });
 
-    const cleanText = finalString
-        .replace(/###\s/g, '')
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/\n\s*\n/g, '\n\n');
+    return finalString
+      .replace(/###\s/g, '')
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\n\s*\n/g, '\n\n');
+  }, [activeTemplate, defaults, parseVariableName, templateLanguage]);
+
+  const handleCopy = () => {
+    const cleanText = getGeneratedPromptText();
+    if (!cleanText) return;
 
     copyToClipboard(cleanText).then((success) => {
       if (success) {
@@ -1718,6 +1734,33 @@ const App = () => {
         setTimeout(() => setCopied(false), 2000);
       }
     });
+  };
+
+  const handleCopyAndGenerate = () => {
+    const cleanText = getGeneratedPromptText();
+
+    if (cleanText) {
+      copyToClipboard(cleanText).then((success) => {
+        if (success) {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        }
+      });
+    }
+
+    const supportedNanoLocales = new Set(["en", "zh", "ko", "ja", "es", "de", "fr", "ru", "ar", "pt", "it"]);
+    const resolvedNanoLocale = (language === "cn" ? "zh" : language);
+    const nanoLocale = supportedNanoLocales.has(resolvedNanoLocale) ? resolvedNanoLocale : "";
+    const base = nanoLocale
+      ? `https://www.nanobananapro.site/${nanoLocale}`
+      : "https://www.nanobananapro.site";
+
+    const normalizedBase = base.replace(/\/+$/, "");
+    const urlWithPrompt = cleanText
+      ? `${normalizedBase}/?src=promptcraft&prompt=${encodeURIComponent(cleanText)}#workspace`
+      : `${normalizedBase}/#workspace`;
+    const targetUrl = urlWithPrompt.length <= 1900 ? urlWithPrompt : `${normalizedBase}/#workspace`;
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
   };
 
   const handleExportImage = async () => {
@@ -1895,7 +1938,7 @@ const App = () => {
                    const originalImg = card.querySelector('img');
                    const imgSrc = tempBase64Src || (originalImg ? originalImg.src : '');
                    const titleElement = card.querySelector('h2');
-                   const titleText = titleElement ? titleElement.textContent.trim() : getLocalized(activeTemplate.name, language);
+                   const titleText = titleElement ? titleElement.textContent.trim() : getTemplateName(activeTemplate.id, activeTemplate, language);
                    const contentElement = card.querySelector('#final-prompt-content');
                    const contentHTML = contentElement ? contentElement.innerHTML : '';
                    
@@ -2061,7 +2104,7 @@ const App = () => {
 
         // 使用 JPG 格式，质量 0.92（高质量同时节省空间）
         const image = canvas.toDataURL('image/jpeg', 0.92);
-        const activeTemplateName = getLocalized(activeTemplate.name, language);
+        const activeTemplateName = getTemplateName(activeTemplate.id, activeTemplate, language);
         const filename = `${activeTemplateName.replace(/\s+/g, '_')}_prompt.jpg`;
         
         // 检测是否为移动设备和iOS
@@ -2250,6 +2293,16 @@ const App = () => {
             onDetail={() => {
               setIsSettingsOpen(false);
               handleSetDiscoveryView(false);
+            }}
+            onShowcase={() => {
+              const supportedNanoLocales = new Set(["en", "zh", "ko", "ja", "es", "de", "fr", "ru", "ar", "pt", "it"]);
+              const resolvedNanoLocale = (language === "cn" ? "zh" : language);
+              const nanoLocale = supportedNanoLocales.has(resolvedNanoLocale) ? resolvedNanoLocale : "";
+              const base = nanoLocale
+                ? `https://www.nanobananapro.site/${nanoLocale}`
+                : "https://www.nanobananapro.site";
+              const targetUrl = `${base.replace(/\/+$/, '')}/prompts`;
+              window.open(targetUrl, "_blank", "noopener,noreferrer");
             }}
             isSortMenuOpen={isSortMenuOpen}
             setIsSortMenuOpen={setIsSortMenuOpen}
@@ -2498,12 +2551,13 @@ const App = () => {
               setImageUpdateMode={setImageUpdateMode}
               setCurrentImageEditIndex={setCurrentImageEditIndex}
 
-              // ===== 分享/导出/复制 =====
-              handleShareLink={handleShareLink}
-              handleExportImage={handleExportImage}
-              isExporting={isExporting}
-              handleCopy={handleCopy}
-              copied={copied}
+	              // ===== 分享/导出/复制 =====
+	              handleShareLink={handleShareLink}
+	              handleExportImage={handleExportImage}
+	              isExporting={isExporting}
+	              handleCopyAndGenerate={handleCopyAndGenerate}
+	              handleCopy={handleCopy}
+	              copied={copied}
 
               // ===== 模态框 =====
               setIsInsertModalOpen={setIsInsertModalOpen}

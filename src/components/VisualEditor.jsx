@@ -88,7 +88,7 @@ export const VisualEditor = React.forwardRef(({
           </h1>
           <div className="flex items-center gap-2">
             <span className={`text-[10px] font-black uppercase tracking-widest ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
-              {language === 'cn' ? '作者' : 'Author'}:
+              {t ? t('author') : 'Author'}:
             </span>
             <span className="text-sm font-bold text-orange-500">
               {author === '官方' ? (t ? t('official') : '官方') : (author || (t ? t('official') : '官方'))}

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Check, Plus, X, Loader2 } from 'lucide-react';
 import { CATEGORY_STYLES, PREMIUM_STYLES } from '../constants/styles';
-import { getLocalized } from '../utils/helpers';
+import { getLocalized, getBankLabel, getBankOption, getCategoryLabel } from '../utils/i18n';
 import { AtomIcon } from './icons/AtomIcon';
 import { RefreshIcon } from './icons/RefreshIcon';
 import {
@@ -147,7 +147,7 @@ export const Variable = ({
       // 调用父组件传入的 AI 生成函数
       const result = await onGenerateAITerms({
         variableId: id,
-        variableLabel: getLocalized(config?.label, language),
+        variableLabel: getBankLabel(id, config, language),
         language: language,
         currentValue: getLocalized(currentVal, language),
         localOptions: config?.options || [], // 传递本地选项
@@ -233,13 +233,13 @@ export const Variable = ({
       {/* 1. 顶部：标题加标签 */}
       <div className={`px-5 py-4 flex justify-between items-center ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
         <span className="text-[17px] font-bold tracking-tight">
-          {getLocalized(config.label, language)}
+          {getBankLabel(id, config, language)}
         </span>
         <span
           className={`text-[11px] px-3 py-1 rounded-full font-bold text-white shadow-sm flex items-center gap-1.5`}
           style={{ background: `linear-gradient(135deg, ${premium.from}, ${premium.to})` }}
         >
-          {getLocalized(categories[categoryId]?.label, language) || categoryId}
+          {getCategoryLabel(categoryId, categories[categoryId], language) || categoryId}
         </span>
       </div>
 
@@ -327,7 +327,7 @@ export const Variable = ({
                       onClick={handleGenerateAITerms}
                       className="text-[10px] text-blue-400 hover:text-blue-300 font-bold uppercase tracking-wider"
                     >
-                      {language === 'cn' ? '重试' : 'Retry'}
+                      {t('retry')}
                     </button>
                   </div>
                 )}
@@ -384,7 +384,7 @@ export const Variable = ({
                       : (isDarkMode ? 'hover:bg-white/5 text-gray-400 hover:text-white' : 'hover:bg-white/80 text-gray-600 hover:text-gray-900')}`}
                   style={isSelected(opt) ? { color: premium.to } : {}}
                 >
-                  <span>{getLocalized(opt, language)}</span>
+                  <span>{getBankOption(id, idx, opt, language)}</span>
                   {isSelected(opt) && <Check size={14} />}
                 </button>
               )) : (

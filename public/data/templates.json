@@ -22,7 +22,8 @@
       "language": [
         "cn",
         "en"
-      ]
+      ],
+      "hot": true
     },
     {
       "id": "tpl_photo_grid",

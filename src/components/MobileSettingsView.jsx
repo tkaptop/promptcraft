@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  Settings, Globe, Database, Download, Upload, 
-  RotateCcw, Trash2, Mail, MessageCircle, Github, 
+import {
+  Settings, Globe, Database, Download, Upload,
+  RotateCcw, Trash2, Mail, MessageCircle, Github,
   ChevronRight, RefreshCw, FileText, Info, X,
-  Moon, Sun, Heart
+  Moon, Sun, Heart, ChevronDown
 } from 'lucide-react';
+import { SUPPORTED_LANGUAGES } from '../constants/translations';
 
 export const MobileSettingsView = ({ 
   language, setLanguage, 
@@ -228,12 +229,30 @@ export const MobileSettingsView = ({
 
       {/* 1. 系统设置 */}
       <SettingSection title={t('general_settings')} icon={Settings}>
-        <SettingItem 
-          icon={Globe} 
-          label={t('language')} 
-          value={language === 'cn' ? '简体中文' : 'English'} 
-          onClick={() => setLanguage(language === 'cn' ? 'en' : 'cn')}
-        />
+        <div className={`w-full flex items-center justify-between px-5 py-4 transition-all border-b ${
+          isDarkMode ? 'border-white/5' : 'border-gray-100/50'
+        }`}>
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-xl ${isDarkMode ? 'bg-white/10 text-gray-300' : 'bg-gray-50 text-gray-600'}`}>
+              <Globe size={18} />
+            </div>
+            <span className={`text-sm font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              {t('language')}
+            </span>
+          </div>
+          <div className="relative">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className={`appearance-none text-sm font-bold px-3 py-1.5 pr-7 rounded-lg cursor-pointer transition-colors ${isDarkMode ? 'bg-white/10 text-gray-300 hover:bg-white/15' : 'bg-orange-50 text-gray-700 hover:bg-orange-100'}`}
+            >
+              {Object.entries(SUPPORTED_LANGUAGES).map(([code, lang]) => (
+                <option key={code} value={code}>{lang.nativeName}</option>
+              ))}
+            </select>
+            <ChevronDown size={14} className={`absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+          </div>
+        </div>
         <div className={`w-full flex items-center justify-between px-5 py-4 transition-all border-b ${
           isDarkMode ? 'border-white/5' : 'border-gray-100/50'
         }`}>
@@ -242,14 +261,14 @@ export const MobileSettingsView = ({
               {isDarkMode ? <Moon size={18} /> : <Sun size={18} />}
             </div>
             <span className={`text-sm font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-              {language === 'cn' ? '外观模式' : 'Appearance'}
+              {t('appearance')}
             </span>
           </div>
           <div className={`premium-toggle-container ${isDarkMode ? 'dark' : 'light'} scale-[0.85] origin-right mr-2`}>
             {[
-              { id: 'light', label: language === 'cn' ? '亮色' : 'Light' },
-              { id: 'dark', label: language === 'cn' ? '暗色' : 'Dark' },
-              { id: 'system', label: language === 'cn' ? '自动' : 'Auto' }
+              { id: 'light', label: t('theme_light') },
+              { id: 'dark', label: t('theme_dark') },
+              { id: 'system', label: t('theme_auto') }
             ].map(mode => (
               <button
                 key={mode.id}
@@ -261,18 +280,18 @@ export const MobileSettingsView = ({
             ))}
           </div>
         </div>
-        <SettingItem 
-          icon={Database} 
-          label={t('storage_mode')} 
-          description={language === 'cn' ? '使用 IndexedDB 模式 (无限容量)' : 'IndexedDB Mode (Unlimited)'}
-          value={storageMode === 'browser' ? (language === 'cn' ? '浏览器' : 'Browser') : (language === 'cn' ? '本地文件夹' : 'Local Folder')} 
+        <SettingItem
+          icon={Database}
+          label={t('storage_mode')}
+          description={t('indexeddb_mode')}
+          value={storageMode === 'browser' ? t('browser') : t('local_folder')}
           disabled={true} // 移动端暂不支持切换到本地文件夹
         />
         {storageMode === 'browser' && storageStats && (
           <div className="px-5 mb-4 mt-2">
             <div className="flex justify-between items-center mb-1.5">
               <span className={`text-[10px] font-bold ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                {language === 'cn' ? '存储空间已用' : 'Storage Used'}
+                {t('storage_used')}
               </span>
               <span className={`text-[10px] font-bold ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                 {(storageStats.usage / 1024 / 1024).toFixed(1)}MB / {(storageStats.quota / 1024 / 1024 / 1024).toFixed(1)}GB
@@ -322,7 +341,7 @@ export const MobileSettingsView = ({
                   <span className={`text-[13px] font-black ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{log.title}</span>
                   {idx === 0 && (
                     <span className="px-1 py-0.5 text-[8px] font-black bg-orange-500 text-white rounded uppercase tracking-wider">
-                      {language === 'cn' ? '最新' : 'LATEST'}
+                      {t('latest')}
                     </span>
                   )}
                 </div>
@@ -343,9 +362,9 @@ export const MobileSettingsView = ({
 
       {/* 4. 关于与联系 */}
       <SettingSection title={t('connect_author')} icon={Info}>
-        <SettingItem 
-          icon={Heart} 
-          label={language === 'cn' ? '鸣谢与致敬' : 'Credits'} 
+        <SettingItem
+          icon={Heart}
+          label={t('credits')}
           onClick={() => setShowCredits(true)}
         />
         <SettingItem 
@@ -354,10 +373,10 @@ export const MobileSettingsView = ({
           value="tanshilong@gmail.com" 
           onClick={() => window.location.href = 'mailto:tanshilong@gmail.com'}
         />
-        <SettingItem 
-          icon={MessageCircle} 
-          label="微信反馈" 
-          value="nanobana" 
+        <SettingItem
+          icon={MessageCircle}
+          label={t('wechat')}
+          value="nanobana"
           onClick={() => setShowWechatQR(true)}
         />
         <SettingItem 
@@ -421,38 +440,20 @@ export const MobileSettingsView = ({
               </div>
               
               <h3 className={`text-xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                {language === 'cn' ? '鸣谢与致敬' : 'Credits'}
+                {t('credits')}
               </h3>
-              
+
               <div className={`space-y-4 text-xs leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                 <p className="font-bold text-orange-600">
-                  {language === 'cn' 
-                    ? '本项目为开源项目，旨在提升 AI 创作者的工作流效率。' 
-                    : 'An open-source project for AI creators.'}
+                  {t('credits_based_on')}
                 </p>
-                
+
                 <p>
-                  {language === 'cn' ? '感谢灵感来源作者：' : 'Thanks to prompt authors:'}
+                  {t('credits_thanks')}
                   <br />
                   <span className={`font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    宝玉(@dotey), MarioTan(@tanshilong), sundyme, Berryxia.AI, sidona, AmirMushich, Latte(@0xbisc), 阿兹特克小羊驼(@AztecaAlpaca)
+                    TanShilongMario (@tanshilong)
                   </span>
-                </p>
-                
-                <p>
-                  {language === 'cn' ? '初期支持：' : 'Early support:'} 
-                  <span className={`font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>松果先森</span>
-                  <br />
-                  {language === 'cn' ? '及所有提供建议、Bug 发现的小伙伴。' : '& all community contributors.'}
-                </p>
-                
-                <div className={`h-px w-10 mx-auto my-4 ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'}`} />
-                
-                <p className="italic">
-                  {language === 'cn' 
-                    ? '最终感谢我的挚爱，我的女神，感谢她能够忍受我在半夜敲键盘的声音，并给予我一路的陪伴和支持。' 
-                    : 'Final thanks to my beloved, my goddess, for enduring my late-night typing and for her constant support.'}
-                  <Heart size={10} className="inline ml-1 text-red-500 fill-red-500" />
                 </p>
               </div>
             </div>
