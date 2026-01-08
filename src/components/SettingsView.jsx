@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import {
   Globe, Database, Download, Upload,
   Trash2, Mail, MessageCircle, Github,
-  ChevronRight, RefreshCw, FolderOpen, X, Heart, ChevronDown
+  ChevronRight, RefreshCw, FolderOpen, X, Heart, ChevronDown,
+  Shield, FileText, ExternalLink
 } from 'lucide-react';
 import { SUPPORTED_LANGUAGES } from '../constants/translations';
+import { LegalModal } from './LegalModal';
 
 export const SettingsView = ({ 
   language, setLanguage, 
@@ -22,6 +24,13 @@ export const SettingsView = ({
   const [showWechatQR, setShowWechatQR] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
   const [storageStats, setStorageStats] = React.useState(null);
+  const [legalModalOpen, setLegalModalOpen] = useState(false);
+  const [legalType, setLegalType] = useState('terms');
+
+  const openLegal = (type) => {
+    setLegalType(type);
+    setLegalModalOpen(true);
+  };
 
   React.useEffect(() => {
     if (storageMode === 'browser' && navigator.storage && navigator.storage.estimate) {
@@ -35,7 +44,7 @@ export const SettingsView = ({
     }
   }, [storageMode]);
   
-  const updateLogs = language === 'cn' ? [
+  const updateLogs = (language === 'zh' || language === 'cn') ? [
     { 
       version: 'V0.7.1', 
       date: '2026年1月7日', 
@@ -544,6 +553,25 @@ export const SettingsView = ({
                 label="GitHub Open Source"
                 onClick={() => window.open('https://github.com/tkaptop/promptcraft', '_blank')}
               />
+              <SettingItem
+                icon={ExternalLink}
+                label="Nano Banana"
+                description="nanobananapro.site"
+                onClick={() => window.open('https://nanobananapro.site', '_blank')}
+              />
+            </SettingSection>
+
+            <SettingSection title="Legal">
+              <SettingItem
+                icon={FileText}
+                label="Terms of Service"
+                onClick={() => openLegal('terms')}
+              />
+              <SettingItem
+                icon={Shield}
+                label="Privacy Policy"
+                onClick={() => openLegal('privacy')}
+              />
             </SettingSection>
           </div>
 
@@ -676,6 +704,14 @@ export const SettingsView = ({
           </div>
         </div>
       )}
+
+      {/* Legal Modal */}
+      <LegalModal
+        isOpen={legalModalOpen}
+        onClose={() => setLegalModalOpen(false)}
+        type={legalType}
+        isDarkMode={isDarkMode}
+      />
     </div>
   );
 };

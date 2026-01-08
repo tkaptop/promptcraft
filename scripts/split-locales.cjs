@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 
 const LOCALES_DIR = path.join(__dirname, '../src/locales');
-const LANGUAGES = ['en', 'cn', 'ja', 'ko', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ar'];
+const LANGUAGES = ['en', 'zh', 'ja', 'ko', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ar'];
 
 // 定义拆分规则
 const SPLIT_RULES = {

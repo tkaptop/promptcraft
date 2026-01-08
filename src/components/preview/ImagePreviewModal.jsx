@@ -299,7 +299,7 @@ const ImagePreviewModal = React.memo(({
                   {/* Hint for non-expanded state */}
                   {!isTextExpanded && (
                     <div className={`px-6 pb-24 text-[10px] font-medium animate-pulse text-center flex-shrink-0 ${isDarkMode ? 'text-white/20' : 'text-gray-400'}`}>
-                      {t ? t('tap_to_view_details') : (language === 'cn' ? '点击卡片或向上滑动查看详细内容' : 'Tap or swipe up to view details')}
+                      {t ? t('tap_to_view_details') : ((language === 'zh' || language === 'cn') ? '点击卡片或向上滑动查看详细内容' : 'Tap or swipe up to view details')}
                     </div>
                   )}
               </div>

@@ -228,7 +228,7 @@ export const TemplateEditor = React.memo(({
               <div className="flex items-center gap-1.5 md:gap-3">
                 <PremiumButton
                   onClick={handleShareLink}
-                  title={language === 'cn' ? '分享模版' : t('share_link')}
+                  title={(language === 'zh' || language === 'cn') ? '分享模版' : t('share_link')}
                   icon={Share2}
                   isDarkMode={isDarkMode}
                   className="flex-none"

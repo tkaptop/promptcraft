@@ -8,16 +8,16 @@
  * @property {Object.<string, string|Object>} selections - 默认选中的变量值 map，支持双语对象或字符串
  * @property {string[]} tags - 模板标签数组，可选值：建筑、人物、摄影、产品、图表、卡通、宠物、游戏、创意
  * @property {string|string[]} language - 模板语言，可选值：
- *   - 'cn' - 仅支持中文
+ *   - 'zh' - 仅支持中文
  *   - 'en' - 仅支持英文
- *   - ['cn', 'en'] - 支持双语（默认值）
+ *   - ['zh', 'en'] - 支持双语（默认值）
  * 
  * @example 双语模板
  * {
  *   id: "tpl_example",
  *   name: { cn: "示例模板", en: "Example Template" },
  *   content: { cn: "中文内容...", en: "English content..." },
- *   language: ["cn", "en"]
+ *   language: ["zh", "en"]
  * }
  * 
  * @example 单语言模板（仅中文）
@@ -25,14 +25,14 @@
  *   id: "tpl_cn_only",
  *   name: "仅中文模板",
  *   content: "中文内容...",
- *   language: "cn"  // 或 ["cn"]
+ *   language: "zh"  // 或 ["zh"]
  * }
  */
 
 /**
  * 模板系统版本号，每次更新 templates.js 或 banks.js 时请更新此版本号
  */
-export const SYSTEM_DATA_VERSION = "0.8.1";
+export const SYSTEM_DATA_VERSION = "0.8.2";
 
 /**
  * 分享功能正式环境域名（扫码导入需使用公网可访问地址）
@@ -1088,7 +1088,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
     author: "@berryxia（Berryxia.AI）",
     selections: {},
     tags: ["人物", "创意", "图表"],
-    language: ["cn", "en"],
+    language: ["zh", "en"],
     hot: true
   },
   {
@@ -1119,7 +1119,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "lens_param-8": { cn: "85mm, f/2.2", en: "85mm, f/2.2" }
     },
     tags: ["人物", "摄影"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_fashion",
@@ -1129,7 +1129,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
     author: "@tanshilong（MarioTan）",
     selections: {},
     tags: ["人物", "创意", "卡通"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_character_selfie",
@@ -1139,7 +1139,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
     author: "@tanshilong（MarioTan）",
     selections: {},
     tags: ["人物", "创意"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_classic_scene",
@@ -1153,7 +1153,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "position": { cn: "顶部中央", en: "Top Center" }
     },
     tags: ["卡通", "创意", "游戏"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_corporate_growth",
@@ -1167,7 +1167,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["建筑", "创意", "图表"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_fisheye_urban",
@@ -1194,7 +1194,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "render_style": { cn: "高质量的 2D 插画风格", en: "High-quality 2D illustration style" }
     },
     tags: ["摄影", "创意", "人物"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_detective_social",
@@ -1208,7 +1208,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "9:16竖构图", en: "9:16 Vertical" }
     },
     tags: ["创意", "人物", "摄影"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_magazine_cover",
@@ -1225,7 +1225,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "9:16竖构图", en: "9:16 Vertical" }
     },
     tags: ["人物", "摄影", "创意"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_manga_reality",
@@ -1239,7 +1239,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "9:16竖构图", en: "9:16 Vertical" }
     },
     tags: ["人物", "创意", "卡通"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_industrial_design",
@@ -1258,7 +1258,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["产品", "创意", "图表"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_photo_grid_v2",
@@ -1288,7 +1288,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "lens_param-8": { cn: "85mm, f/2.2", en: "85mm, f/2.2" }
     },
     tags: ["人物", "摄影"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_raindrop_art",
@@ -1301,7 +1301,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["摄影", "创意"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_art_growth",
@@ -1315,7 +1315,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["建筑", "创意", "图表"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_miniature_desk",
@@ -1330,7 +1330,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "4:3横构图", en: "4:3 Horizontal" }
     },
     tags: ["摄影", "创意", "卡通"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_japanese_product_poster",
@@ -1343,7 +1343,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "16:9横构图", en: "16:9 Horizontal" }
     },
     tags: ["产品", "创意", "摄影"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_luxury_editorial",
@@ -1359,7 +1359,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["人物", "摄影", "创意"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_pixar_deconstruction",
@@ -1374,7 +1374,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "16:9横构图", en: "16:9 Horizontal" }
     },
     tags: ["人物", "创意", "卡通", "图表"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_street_self_dialogue",
@@ -1390,7 +1390,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["人物", "摄影", "创意"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_wooden_art_xmas",
@@ -1403,7 +1403,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["产品", "创意", "摄影"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_brand_concept_object",
@@ -1417,7 +1417,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "1:1", en: "1:1 Square" }
     },
     tags: ["产品", "创意", "摄影"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_fashion_focus",
@@ -1431,7 +1431,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["人物", "摄影", "创意"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_city_glimpse",
@@ -1449,7 +1449,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "4:3横构图", en: "4:3 Horizontal" }
     },
     tags: ["建筑", "创意", "摄影"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_multiple_selves_indoor",
@@ -1468,7 +1468,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["人物", "摄影", "创意"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_character_sheet_art",
@@ -1483,7 +1483,7 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "draw_style": { cn: "手绘漫画风格", en: "Hand-drawn Manga Style" }
     },
     tags: ["人物", "创意"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   },
   {
     id: "tpl_underwater_caustics",
@@ -1499,6 +1499,6 @@ export const INITIAL_TEMPLATES_CONFIG = [
       "ratio": { cn: "3:4竖构图", en: "3:4 Vertical" }
     },
     tags: ["人物", "摄影", "创意"],
-    language: ["cn", "en"]
+    language: ["zh", "en"]
   }
 ];

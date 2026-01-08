@@ -57,17 +57,36 @@ const App = () => {
   const [language, setLanguage] = useStickyState(getSystemLanguage(), "app_language_v1"); // 全局UI语言
   const [templateLanguage, setTemplateLanguage] = useStickyState(getSystemLanguage(), "app_template_language_v1"); // 模板内容语言
   const [activeTemplateId, setActiveTemplateId] = useStickyState("tpl_default", "app_active_template_id_v4");
+
+  // 语言码迁移：兼容历史 cn -> zh（避免下拉框无选中项/翻译加载错位）
+  useEffect(() => {
+    const raw = (language || '').toLowerCase();
+    const primary = raw.split('-')[0];
+    if (primary === 'cn' || primary === 'zh') {
+      if (language !== 'zh') setLanguage('zh');
+    }
+  }, [language, setLanguage]);
+
+  useEffect(() => {
+    const raw = (templateLanguage || '').toLowerCase();
+    const primary = raw.split('-')[0];
+    if (primary === 'cn' || primary === 'zh') {
+      if (templateLanguage !== 'zh') setTemplateLanguage('zh');
+    }
+  }, [templateLanguage, setTemplateLanguage]);
   
   // Derived State: Current Active Template
   const activeTemplate = useMemo(() => {
     return templates.find(t => t.id === activeTemplateId) || templates[0];
   }, [templates, activeTemplateId]);
 
-  // i18n: lazy-load 非 cn/en 语言包并触发一次 re-render
+  // i18n: lazy-load 非 zh/en 语言包并触发一次 re-render
   const [, bumpI18nVersion] = useState(0);
   useEffect(() => {
     let cancelled = false;
-    const lang = (language || 'en').toLowerCase();
+    const raw = (language || 'en').toLowerCase();
+    const primary = raw.split('-')[0];
+    const lang = (primary === 'cn' ? 'zh' : primary);
     if (TRANSLATIONS[lang]) return;
     (async () => {
       await ensureTranslations(lang);
@@ -80,8 +99,10 @@ const App = () => {
   useEffect(() => {
     const templateLangs = activeTemplate?.language
       ? (Array.isArray(activeTemplate.language) ? activeTemplate.language : [activeTemplate.language])
-      : ['cn', 'en'];
-    const normalizedLangs = templateLangs.filter(Boolean);
+      : ['zh', 'en'];
+    const normalizedLangs = templateLangs
+      .filter(Boolean)
+      .map(l => (String(l).toLowerCase().split('-')[0] === 'cn' ? 'zh' : String(l).toLowerCase().split('-')[0]));
     if (normalizedLangs.length === 0) return;
     if (!normalizedLangs.includes(templateLanguage)) {
       setTemplateLanguage(normalizedLangs[0]);
@@ -1091,6 +1112,12 @@ const App = () => {
 
   // Base filtered templates (by search and language)
   const baseFilteredTemplates = React.useMemo(() => {
+    const normalizeLangCode = (l) => {
+      const primary = String(l || 'en').toLowerCase().split('-')[0];
+      return primary === 'cn' ? 'zh' : primary;
+    };
+    const currentLang = normalizeLangCode(language);
+
     return templates.filter(t => {
       // Search filter
       const templateName = getTemplateName(t.id, t, language);
@@ -1098,8 +1125,9 @@ const App = () => {
         templateName.toLowerCase().includes(searchQuery.toLowerCase());
       
       // 语言过滤：如果模板指定了语言，且不包含当前语言，则隐藏
-      const templateLangs = t.language ? (Array.isArray(t.language) ? t.language : [t.language]) : ['cn', 'en'];
-      const matchesLanguage = templateLangs.includes(language);
+      const templateLangs = (t.language ? (Array.isArray(t.language) ? t.language : [t.language]) : ['zh', 'en'])
+        .map(normalizeLangCode);
+      const matchesLanguage = templateLangs.includes(currentLang);
       
       return matchesSearch && matchesLanguage;
     });
@@ -1107,6 +1135,10 @@ const App = () => {
 
   // Discovery View templates (ignore tags, but respect search, language and sort)
   const discoveryTemplates = React.useMemo(() => {
+    const currentLang = (String(language || 'en').toLowerCase().split('-')[0] === 'cn')
+      ? 'zh'
+      : String(language || 'en').toLowerCase().split('-')[0];
+
     return [...baseFilteredTemplates].sort((a, b) => {
       // Hot templates always come first
       if (a.hot && !b.hot) return -1;
@@ -1120,9 +1152,9 @@ const App = () => {
         case 'oldest':
           return templates.indexOf(a) - templates.indexOf(b);
         case 'a-z':
-          return nameA.localeCompare(nameB, language === 'cn' ? 'zh-CN' : 'en');
+          return nameA.localeCompare(nameB, (currentLang === 'zh' ? 'zh-CN' : 'en'));
         case 'z-a':
-          return nameB.localeCompare(nameA, language === 'cn' ? 'zh-CN' : 'en');
+          return nameB.localeCompare(nameA, (currentLang === 'zh' ? 'zh-CN' : 'en'));
         case 'random':
           const hashA = (a.id + randomSeed).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
           const hashB = (b.id + randomSeed).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
@@ -1770,7 +1802,7 @@ const App = () => {
     }
 
     const supportedNanoLocales = new Set(["en", "zh", "ko", "ja", "es", "de", "fr", "ru", "ar", "pt", "it"]);
-    const resolvedNanoLocale = (language === "cn" ? "zh" : language);
+    const resolvedNanoLocale = ((language === "zh" || language === "cn") ? "zh" : language);
     const nanoLocale = supportedNanoLocales.has(resolvedNanoLocale) ? resolvedNanoLocale : "";
     const base = nanoLocale
       ? `https://www.nanobananapro.site/${nanoLocale}`
@@ -2317,7 +2349,7 @@ const App = () => {
             }}
             onShowcase={() => {
               const supportedNanoLocales = new Set(["en", "zh", "ko", "ja", "es", "de", "fr", "ru", "ar", "pt", "it"]);
-              const resolvedNanoLocale = (language === "cn" ? "zh" : language);
+              const resolvedNanoLocale = ((language === "zh" || language === "cn") ? "zh" : language);
               const nanoLocale = supportedNanoLocales.has(resolvedNanoLocale) ? resolvedNanoLocale : "";
               const base = nanoLocale
                 ? `https://www.nanobananapro.site/${nanoLocale}`

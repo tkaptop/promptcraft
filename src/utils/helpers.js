@@ -307,11 +307,11 @@ export const getCategoryLabel = (categoryId, categoryData, language, translation
 
 // 获取系统语言 (非中文环境默认返回 en)
 export const getSystemLanguage = () => {
-  if (typeof window === 'undefined') return 'cn';
+  if (typeof window === 'undefined') return 'zh';
   const lang = (navigator.languages?.[0] || navigator.language || 'en').toLowerCase();
   const primary = lang.split('-')[0];
 
-  if (primary === 'zh') return 'cn';
+  if (primary === 'zh') return 'zh';
   if (primary === 'en') return 'en';
   if (primary === 'ko') return 'ko';
   if (primary === 'ja') return 'ja';

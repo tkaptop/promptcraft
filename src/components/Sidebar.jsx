@@ -136,7 +136,7 @@ export const Sidebar = ({
           <button 
             onClick={() => {
               if (onShowcase) return onShowcase();
-              const resolvedNanoLocale = (language === "cn" ? "zh" : language);
+              const resolvedNanoLocale = ((language === "zh" || language === "cn") ? "zh" : language);
               const nanoLocale = supportedNanoLocales.has(resolvedNanoLocale) ? resolvedNanoLocale : "";
               const base = nanoLocale
                 ? `https://www.nanobananapro.site/${nanoLocale}`
@@ -151,7 +151,7 @@ export const Sidebar = ({
                 ? 'bg-gradient-to-b from-orange-500/95 to-red-500/80 text-white shadow-[0_10px_22px_rgba(249,115,22,0.22)] hover:shadow-[0_14px_30px_rgba(249,115,22,0.32)]'
                 : 'bg-gradient-to-b from-orange-500 to-orange-600 text-white shadow-[0_10px_22px_rgba(234,88,12,0.25)] hover:shadow-[0_14px_30px_rgba(234,88,12,0.32)]'}
             `}
-            title={language === 'cn' ? 'Showcase大全' : 'Showcase'}
+            title={(language === 'zh' || language === 'cn') ? 'Showcase大全' : 'Showcase'}
           >
             <span className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full ${isDarkMode ? 'bg-white' : 'bg-white'} shadow`} />
             <GalleryIcon size={26} />

@@ -3,9 +3,10 @@ import {
   Settings, Globe, Database, Download, Upload,
   RotateCcw, Trash2, Mail, MessageCircle, Github,
   ChevronRight, RefreshCw, FileText, Info, X,
-  Moon, Sun, Heart, ChevronDown
+  Moon, Sun, Heart, ChevronDown, Shield, ExternalLink
 } from 'lucide-react';
 import { SUPPORTED_LANGUAGES } from '../constants/translations';
+import { LegalModal } from './LegalModal';
 
 export const MobileSettingsView = ({ 
   language, setLanguage, 
@@ -22,6 +23,13 @@ export const MobileSettingsView = ({
   const [showWechatQR, setShowWechatQR] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
   const [storageStats, setStorageStats] = React.useState(null);
+  const [legalModalOpen, setLegalModalOpen] = useState(false);
+  const [legalType, setLegalType] = useState('terms');
+
+  const openLegal = (type) => {
+    setLegalType(type);
+    setLegalModalOpen(true);
+  };
 
   React.useEffect(() => {
     if (storageMode === 'browser' && navigator.storage && navigator.storage.estimate) {
@@ -36,7 +44,7 @@ export const MobileSettingsView = ({
   }, [storageMode]);
   
   // 完善后的更新日志 (同步桌面端内容)
-  const updateLogs = language === 'cn' ? [
+  const updateLogs = (language === 'zh' || language === 'cn') ? [
     { 
       version: 'V0.7.1', 
       date: '2026-01-07', 
@@ -384,6 +392,26 @@ export const MobileSettingsView = ({
           label={t('github_link')} 
           onClick={() => window.open('https://github.com/tkaptop/promptcraft', '_blank')}
         />
+        <SettingItem 
+          icon={ExternalLink} 
+          label="Nano Banana" 
+          description="nanobananapro.site"
+          onClick={() => window.open('https://nanobananapro.site', '_blank')}
+        />
+      </SettingSection>
+
+      {/* 5. 法律条款 */}
+      <SettingSection title="Legal" icon={Shield}>
+        <SettingItem
+          icon={FileText}
+          label="Terms of Service"
+          onClick={() => openLegal('terms')}
+        />
+        <SettingItem 
+          icon={Shield} 
+          label="Privacy Policy" 
+          onClick={() => openLegal('privacy')}
+        />
       </SettingSection>
 
       {/* WeChat QR Popover (Mobile Style) */}
@@ -465,6 +493,14 @@ export const MobileSettingsView = ({
         <p className={`text-[10px] font-black tracking-[0.3em] uppercase ${isDarkMode ? 'text-white' : 'text-black'}`}>Banana Prompt V0.7.1</p>
         <p className={`text-[9px] font-bold mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Made by nanobananapro.site</p>
       </div>
+
+      {/* Legal Modal */}
+      <LegalModal
+        isOpen={legalModalOpen}
+        onClose={() => setLegalModalOpen(false)}
+        type={legalType}
+        isDarkMode={isDarkMode}
+      />
     </div>
   );
 };

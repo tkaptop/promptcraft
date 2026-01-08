@@ -1,14 +1,14 @@
 // 翻译配置 (Translations)
-// 支持的语言: cn, en, ko, ja, es, de, fr, ru, ar, pt, it
+// 支持的语言: zh, en, ko, ja, es, de, fr, ru, ar, pt, it
 // 拆分为: common, banks, templates, seo
 
-// 默认预加载 cn/en 的 common（核心UI），其余按需 lazy-load
-import cnCommon from '../locales/cn/common.json';
+// 默认预加载 zh/en 的 common（核心UI），其余按需 lazy-load
+import zhCommon from '../locales/zh/common.json';
 import enCommon from '../locales/en/common.json';
 
 // 语言配置
 export const SUPPORTED_LANGUAGES = {
-  cn: { name: '中文', nativeName: '中文' },
+  zh: { name: '中文', nativeName: '中文' },
   en: { name: 'English', nativeName: 'English' },
   ko: { name: 'Korean', nativeName: '한국어' },
   ja: { name: 'Japanese', nativeName: '日本語' },
@@ -24,24 +24,33 @@ export const SUPPORTED_LANGUAGES = {
 // 语言代码列表
 export const LANGUAGE_CODES = Object.keys(SUPPORTED_LANGUAGES);
 
-// 翻译数据缓存（cn/en common 预加载；其他按需加载）
+// 语言代码标准化（兼容历史 cn -> zh）
+const normalizeLang = (lang) => {
+  const l = (lang || 'en').toLowerCase();
+  const primary = l.split('-')[0];
+  if (primary === 'zh') return 'zh';
+  if (primary === 'cn') return 'zh';
+  return primary;
+};
+
+// 翻译数据缓存（zh/en common 预加载；其他按需加载）
 export const TRANSLATIONS = {
-  cn: { ...cnCommon },
+  zh: { ...zhCommon },
   en: { ...enCommon },
 };
 
 // 模块加载状态跟踪
 const loadedModules = {
-  cn: { common: true, banks: false, templates: false, seo: false },
+  zh: { common: true, banks: false, templates: false, seo: false },
   en: { common: true, banks: false, templates: false, seo: false },
 };
 
 // 模块加载器
 const MODULE_LOADERS = {
-  cn: {
-    banks: () => import('../locales/cn/banks.json').then(m => m.default),
-    templates: () => import('../locales/cn/templates.json').then(m => m.default),
-    seo: () => import('../locales/cn/seo.json').then(m => m.default),
+  zh: {
+    banks: () => import('../locales/zh/banks.json').then(m => m.default),
+    templates: () => import('../locales/zh/templates.json').then(m => m.default),
+    seo: () => import('../locales/zh/seo.json').then(m => m.default),
   },
   en: {
     banks: () => import('../locales/en/banks.json').then(m => m.default),
@@ -110,7 +119,7 @@ const MODULE_LOADERS = {
  * @param {string} module - 模块名 (common, banks, templates, seo)
  */
 export const loadModule = async (lang, module) => {
-  const normalizedLang = (lang || 'en').toLowerCase();
+  const normalizedLang = normalizeLang(lang);
   
   // 检查是否已加载
   if (loadedModules[normalizedLang]?.[module]) {
@@ -144,7 +153,7 @@ export const loadModule = async (lang, module) => {
  * @returns {Promise<object|null>} 已加载的翻译对象（失败返回 null）
  */
 export const ensureTranslations = async (language) => {
-  const lang = (language || 'en').toLowerCase();
+  const lang = normalizeLang(language);
   
   // 加载所有模块
   const modules = ['common', 'banks', 'templates', 'seo'];
@@ -157,7 +166,7 @@ export const ensureTranslations = async (language) => {
  * 确保SEO模块已加载（用于SEO组件）
  */
 export const ensureSEO = async (language) => {
-  const lang = (language || 'en').toLowerCase();
+  const lang = normalizeLang(language);
   await loadModule(lang, 'seo');
   return TRANSLATIONS[lang];
 };
@@ -166,7 +175,7 @@ export const ensureSEO = async (language) => {
  * 确保Banks模块已加载（用于词库相关组件）
  */
 export const ensureBanks = async (language) => {
-  const lang = (language || 'en').toLowerCase();
+  const lang = normalizeLang(language);
   await loadModule(lang, 'banks');
   return TRANSLATIONS[lang];
 };
@@ -175,14 +184,14 @@ export const ensureBanks = async (language) => {
  * 确保Templates模块已加载（用于模板相关组件）
  */
 export const ensureTemplates = async (language) => {
-  const lang = (language || 'en').toLowerCase();
+  const lang = normalizeLang(language);
   await loadModule(lang, 'templates');
   return TRANSLATIONS[lang];
 };
 
 // 获取翻译文本，如果当前语言没有则回退到英文
 export const getTranslation = (language, key, params = {}) => {
-  const lang = (language || 'en').toLowerCase();
+  const lang = normalizeLang(language);
   let str = TRANSLATIONS[lang]?.[key] || TRANSLATIONS.en?.[key] || key;
 
   // 替换所有 {{param}} 占位符（同一参数可能出现多次）

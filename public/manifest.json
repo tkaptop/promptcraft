@@ -1,7 +1,7 @@
 {
-  "name": "Prompt Fill",
-  "short_name": "Prompt Fill",
-  "description": "专业的 AI 提示词管理与优化工具",
+  "name": "Banana Prompt",
+  "short_name": "Banana Prompt",
+  "description": "AI Image Prompt Library for Nano Banana - Browse curated templates and generate stunning images",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#DFDFDF",

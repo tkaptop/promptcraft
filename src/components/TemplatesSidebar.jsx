@@ -126,7 +126,7 @@ export const TemplatesSidebar = React.memo(({
                 <button 
                   onClick={() => setSelectedTags("")} 
                   className={`px-3 py-1 rounded-xl tracking-widest capitalize transition-all ${
-                    language === 'cn' 
+                    (language === 'zh' || language === 'cn')
                       ? 'text-[11px] font-black' 
                       : 'text-[8px] font-medium'
                   } ${selectedTags === "" ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' : (isDarkMode ? 'text-gray-500 hover:text-gray-300 hover:bg-white/5' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100')}`}
@@ -138,7 +138,7 @@ export const TemplatesSidebar = React.memo(({
                     key={tag} 
                     onClick={() => setSelectedTags(selectedTags === tag ? "" : tag)} 
                     className={`px-3 py-1 rounded-xl tracking-widest capitalize transition-all ${
-                      language === 'cn' 
+                      (language === 'zh' || language === 'cn')
                         ? 'text-[11px] font-black' 
                         : 'text-[8px] font-medium'
                     } ${selectedTags === tag ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' : (isDarkMode ? 'text-gray-500 hover:text-gray-300 hover:bg-white/5' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100')}`}
