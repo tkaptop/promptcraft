@@ -6,7 +6,6 @@ import { getTemplateName } from '../utils/i18n';
 import { getTranslation } from '../constants/translations';
 import { Sidebar } from './Sidebar';
 import { FireworkEffect } from './FireworkEffect';
-import { SEOContent } from './SEOContent';
 import { FEATURE_FLAGS } from '../constants/featureFlags';
 import { TAG_LABELS } from '../constants/styles';
 
@@ -149,17 +148,10 @@ export const DiscoveryView = React.memo(({
     );
   }
 
-  // Scroll to top handler for CTA button
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <main
-      className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden"
+      className="flex-1 flex items-stretch gap-4 overflow-hidden"
     >
-      {/* Hero Section - First Screen (fill parent height, independent scroll for waterfall) */}
-      <div className="min-h-full flex-shrink-0 flex items-stretch gap-4">
       {/* Middle Side: Categories Sidebar (Desktop Only) - 注释掉，之后版本启用 */}
       {/* {!isMobile && (
         <div 
@@ -361,16 +353,6 @@ export const DiscoveryView = React.memo(({
               </div>
           </footer>
       </div>
-      </div>
-      {/* End of Hero Section */}
-
-      {/* SEO Content Sections */}
-      <SEOContent
-        isDarkMode={isDarkMode}
-        language={language}
-        onExploreClick={scrollToTop}
-      />
-
       <FireworkEffect
         ref={fireworkRef}
         onStart={() => {
