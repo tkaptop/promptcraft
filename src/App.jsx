@@ -17,6 +17,7 @@ import { deepClone, makeUniqueKey, waitForImageLoad, getSystemLanguage, compress
 import { getLocalized, getTemplateName, getBankLabel } from './utils/i18n';
 import { mergeTemplatesWithSystem, mergeBanksWithSystem } from './utils/merge';
 import { generateAITerms } from './utils/aiService';  // AI 服务
+import { applyRuntimeSEO } from './utils/seo.js';
 
 // ====== 导入自定义 Hooks ======
 import { useStickyState, useAsyncStickyState, useEditorHistory, useLinkageGroups, useShareFunctions, useTemplateManagement } from './hooks';
@@ -671,10 +672,12 @@ const App = () => {
         const templateName = getTemplateName(activeTemplate.id, activeTemplate, language);
         if (templateName) {
           const siteTitle = "Banana Prompt";
-          document.title = `${templateName} - ${siteTitle}`;
+          const nextTitle = `${templateName} - ${siteTitle}`;
+          document.title = nextTitle;
           
           // 动态更新 meta description
           const metaDescription = document.querySelector('meta[name="description"]');
+          let nextDescription = '';
           if (metaDescription) {
             const content = typeof activeTemplate.content === 'object' 
               ? (activeTemplate.content[language] || activeTemplate.content.cn || activeTemplate.content.en || "")
@@ -682,9 +685,18 @@ const App = () => {
             
             if (content) {
               const descriptionText = content.slice(0, 150).replace(/[#*`]/g, '').replace(/\s+/g, ' ');
-              metaDescription.setAttribute("content", `${templateName}: ${descriptionText}...`);
+              nextDescription = `${templateName}: ${descriptionText}...`;
+              metaDescription.setAttribute("content", nextDescription);
             }
           }
+
+          // 同步 OG/Twitter/canonical/hreflang（语言切换/模板切换时保持一致）
+          applyRuntimeSEO({
+            language,
+            title: nextTitle,
+            description: nextDescription || metaDescription?.getAttribute('content') || '',
+            ogImage: '/og-image.png',
+          });
         }
       } catch (e) {
         console.error("SEO update error:", e);
