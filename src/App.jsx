@@ -97,6 +97,21 @@ const App = () => {
     return null;
   };
 
+  // 允许从 URL 直接打开某个模板（给 /showcase/ 静态落地页使用）
+  const getTemplateFromUrl = () => {
+    if (typeof window === 'undefined') return null;
+    const hashQuery = window.location.hash.includes('?')
+      ? window.location.hash.split('?')[1]
+      : '';
+    const paramSource = window.location.search
+      ? window.location.search
+      : (hashQuery ? `?${hashQuery}` : '');
+    if (!paramSource) return null;
+    const params = new URLSearchParams(paramSource.startsWith('?') ? paramSource.slice(1) : paramSource);
+    const id = params.get('tpl') || params.get('template') || params.get('templateId');
+    return id ? String(id).trim() : null;
+  };
+
   // 首次进入：如果 URL 显式带语言，则覆盖当前语言
   const appliedUrlLangRef = useRef(false);
   useEffect(() => {
@@ -107,6 +122,20 @@ const App = () => {
     }
     appliedUrlLangRef.current = true;
   }, [language, setLanguage]);
+
+  // 首次进入：如果 URL 显式带模板 id，则切到详情页并选中该模板
+  const appliedUrlTplRef = useRef(false);
+  useEffect(() => {
+    if (appliedUrlTplRef.current) return;
+    if (!isTemplatesLoaded) return;
+    const tplId = getTemplateFromUrl();
+    if (tplId && templates.some(t => t.id === tplId)) {
+      setActiveTemplateId(tplId);
+      // 桌面端/移动端都尽量切到详情编辑视图
+      setDiscoveryView(false);
+    }
+    appliedUrlTplRef.current = true;
+  }, [isTemplatesLoaded, templates, setActiveTemplateId]);
 
   // 语言码迁移：兼容历史 cn -> zh（避免下拉框无选中项/翻译加载错位）
   useEffect(() => {

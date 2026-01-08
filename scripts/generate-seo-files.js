@@ -72,6 +72,11 @@ for (const code of localeCodes) {
 urls.push(`${siteUrl}/terms/`);
 urls.push(`${siteUrl}/privacy/`);
 
+// Small number of marketing pages (single version; keep sitemap lean)
+urls.push(`${siteUrl}/showcase/`);
+urls.push(`${siteUrl}/faq/`);
+urls.push(`${siteUrl}/about/`);
+
 const today = new Date().toISOString().slice(0, 10);
 const sitemapXml = buildSitemapXml({ siteUrl, urls: uniqSorted(urls), lastmod: today });
 const robotsTxt = buildRobotsTxt({ siteUrl });

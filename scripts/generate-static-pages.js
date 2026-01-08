@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { INITIAL_TEMPLATES_CONFIG } from '../src/data/templates.js';
 import { LEGAL_LAST_UPDATED, TERMS_SECTIONS, PRIVACY_SECTIONS } from '../src/content/legal.js';
+import { ABOUT_CONTENT, FAQ_CONTENT } from '../src/content/marketing.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
@@ -111,6 +112,8 @@ function layout({ pageTitle, subtitle, contentHtml, backHref = '/' }) {
           </a>
           <nav class="flex items-center gap-4 text-sm">
             <a class="text-gray-600 hover:text-orange-600" href="/showcase/">Showcase</a>
+            <a class="text-gray-600 hover:text-orange-600" href="/faq/">FAQ</a>
+            <a class="text-gray-600 hover:text-orange-600" href="/about/">About</a>
             <a class="text-gray-600 hover:text-orange-600" href="/terms/">Terms</a>
             <a class="text-gray-600 hover:text-orange-600" href="/privacy/">Privacy</a>
           </nav>
@@ -198,7 +201,7 @@ function showcaseListHtml(templates) {
       ${templates
         .map((tpl) => {
           const name = templateName(tpl, 'en');
-          const href = `/showcase/${encodeURIComponent(tpl.id)}/`;
+          const href = `/?tpl=${encodeURIComponent(tpl.id)}`;
           const img = tpl.imageUrl || '/og-image.png';
           const desc = truncate(templateContent(tpl, 'en'), 120);
           return `
@@ -215,6 +218,25 @@ function showcaseListHtml(templates) {
         })
         .join('\n')}
     </div>
+  `.trim();
+}
+
+function renderSimpleSections({ sections }) {
+  return (sections || [])
+    .map((sec) => {
+      const ps = (sec.paragraphs || []).map((p) => `<p>${escapeHtml(p)}</p>`).join('\n');
+      const bullets = (sec.bullets || []).map((b) => `<li>${escapeHtml(b)}</li>`).join('\n');
+      const ul = bullets ? `<ul>${bullets}</ul>` : '';
+      return `<section><h2>${escapeHtml(sec.title)}</h2>${ps}${ul}</section>`;
+    })
+    .join('\n');
+}
+
+function renderFaq({ items }) {
+  return `
+    ${(items || [])
+      .map((it) => `<section><h2>${escapeHtml(it.q)}</h2><p>${escapeHtml(it.a)}</p></section>`)
+      .join('\n')}
   `.trim();
 }
 
@@ -302,9 +324,102 @@ function run() {
     writePage({ outDir: path.join(distDir, 'privacy'), html });
   }
 
+  // Showcase (list page only)
+  {
+    const pathname = '/showcase/';
+    const title = `Showcase - ${templates.length} AI Prompt Templates | Banana Prompt`;
+    const description = `Browse ${templates.length} curated AI prompt templates for Nano Banana.`;
+    const contentHtml = showcaseListHtml(templates);
+    const body = layout({
+      pageTitle: 'Showcase',
+      subtitle: `${templates.length} templates`,
+      contentHtml,
+      backHref: '/',
+    });
+    const ldJson = {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'Showcase',
+      url: `${SITE_URL}${pathname}`,
+    };
+    const html = makePage({
+      pathname,
+      title,
+      description,
+      ogImage: `${SITE_URL}/og-image.png`,
+      bodyHtml: body,
+      ldJson,
+      lang: 'en',
+    });
+    writePage({ outDir: path.join(distDir, 'showcase'), html });
+  }
+
+  // FAQ
+  {
+    const pathname = '/faq/';
+    const title = `FAQ - Banana Prompt`;
+    const description = 'Frequently asked questions about Banana Prompt.';
+    const contentHtml = renderFaq({ items: FAQ_CONTENT.items });
+    const body = layout({
+      pageTitle: FAQ_CONTENT.title,
+      subtitle: FAQ_CONTENT.subtitle,
+      contentHtml,
+      backHref: '/',
+    });
+    const ldJson = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: (FAQ_CONTENT.items || []).map((it) => ({
+        '@type': 'Question',
+        name: it.q,
+        acceptedAnswer: { '@type': 'Answer', text: it.a },
+      })),
+    };
+    const html = makePage({
+      pathname,
+      title,
+      description,
+      ogImage: `${SITE_URL}/og-image.png`,
+      bodyHtml: body,
+      ldJson,
+      lang: 'en',
+    });
+    writePage({ outDir: path.join(distDir, 'faq'), html });
+  }
+
+  // About
+  {
+    const pathname = '/about/';
+    const title = `About - Banana Prompt`;
+    const description = 'Learn what Banana Prompt is and how it works.';
+    const contentHtml = renderSimpleSections({ sections: ABOUT_CONTENT.sections });
+    const body = layout({
+      pageTitle: ABOUT_CONTENT.title,
+      subtitle: ABOUT_CONTENT.subtitle,
+      contentHtml,
+      backHref: '/',
+    });
+    const ldJson = {
+      '@context': 'https://schema.org',
+      '@type': 'AboutPage',
+      name: 'About',
+      url: `${SITE_URL}${pathname}`,
+    };
+    const html = makePage({
+      pathname,
+      title,
+      description,
+      ogImage: `${SITE_URL}/og-image.png`,
+      bodyHtml: body,
+      ldJson,
+      lang: 'en',
+    });
+    writePage({ outDir: path.join(distDir, 'about'), html });
+  }
+
   console.log('✅ Static SEO pages generated into dist/');
   console.log(`- SITE_URL: ${SITE_URL}`);
-  console.log(`- Pages: /terms /privacy (showcase pages are intentionally NOT generated)`);
+  console.log(`- Pages: /showcase /faq /about /terms /privacy (no per-template pages)`);
 }
 
 run();
