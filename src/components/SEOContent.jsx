@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Sparkles,
@@ -16,14 +16,28 @@ import {
   Globe,
   Shield
 } from 'lucide-react';
-import { getTranslation } from '../constants/translations';
+import { getTranslation, ensureSEO } from '../constants/translations';
 
 /**
  * SEOContent - Landing page SEO sections for Banana Prompt
  * Designed to appear after the hero/discovery view
  */
 export const SEOContent = React.memo(({ isDarkMode, language = 'en', onExploreClick }) => {
-  const [openFaq, setOpenFaq] = React.useState(null);
+  const [openFaq, setOpenFaq] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [, forceUpdate] = useState(0);
+
+  // Load SEO translations on mount and language change
+  useEffect(() => {
+    let mounted = true;
+    ensureSEO(language).then(() => {
+      if (mounted) {
+        setIsLoaded(true);
+        forceUpdate(n => n + 1); // Force re-render after translations loaded
+      }
+    });
+    return () => { mounted = false; };
+  }, [language]);
 
   // Helper function to get translation
   const t = (key) => getTranslation(language, `seo_${key}`);
@@ -126,6 +140,11 @@ export const SEOContent = React.memo(({ isDarkMode, language = 'en', onExploreCl
       transition: { duration: 0.5, ease: "easeOut" }
     }
   };
+
+  // Don't render until translations are loaded
+  if (!isLoaded) {
+    return null;
+  }
 
   return (
     <div className={`w-full overflow-hidden ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
