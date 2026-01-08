@@ -37,19 +37,20 @@ export const LegalModal = React.memo(({ isOpen, onClose, type, isDarkMode, langu
             onClick={onClose}
           />
 
-          {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-3xl md:w-full md:max-h-[85vh] z-[9999] flex flex-col rounded-2xl shadow-2xl overflow-hidden"
-            style={{
-              background: isDarkMode
-                ? 'linear-gradient(180deg, #1f1f1f 0%, #171717 100%)'
-                : 'linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)',
-            }}
-          >
+          {/* Modal Container - 使用 flexbox 居中 */}
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl shadow-2xl overflow-hidden pointer-events-auto"
+              style={{
+                background: isDarkMode
+                  ? 'linear-gradient(180deg, #1f1f1f 0%, #171717 100%)'
+                  : 'linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)',
+              }}
+            >
             {/* Header */}
             <div className={`flex items-center justify-between px-6 py-4 border-b ${
               isDarkMode ? 'border-white/10' : 'border-gray-200'
@@ -103,7 +104,8 @@ export const LegalModal = React.memo(({ isOpen, onClose, type, isDarkMode, langu
                 {t('legal_i_understand')}
               </button>
             </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
