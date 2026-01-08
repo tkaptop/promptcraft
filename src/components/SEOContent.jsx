@@ -26,6 +26,9 @@ export const SEOContent = React.memo(({ isDarkMode, language = 'en', onExploreCl
   const [openFaq, setOpenFaq] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [, forceUpdate] = useState(0);
+  
+  // Detect if we're in a fixed scroll container (mobile) where IntersectionObserver won't work properly
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   // Load SEO translations on mount and language change
   useEffect(() => {
@@ -156,7 +159,7 @@ export const SEOContent = React.memo(({ isDarkMode, language = 'en', onExploreCl
 
       {/* Section 1: What is Banana Prompt */}
       <motion.section
-        initial="hidden"
+        initial={isMobile ? "visible" : "hidden"}
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
@@ -188,7 +191,7 @@ export const SEOContent = React.memo(({ isDarkMode, language = 'en', onExploreCl
 
       {/* Section 2: Features */}
       <motion.section
-        initial="hidden"
+        initial={isMobile ? "visible" : "hidden"}
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
@@ -238,7 +241,7 @@ export const SEOContent = React.memo(({ isDarkMode, language = 'en', onExploreCl
 
       {/* Section 3: How It Works */}
       <motion.section
-        initial="hidden"
+        initial={isMobile ? "visible" : "hidden"}
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
@@ -331,7 +334,7 @@ export const SEOContent = React.memo(({ isDarkMode, language = 'en', onExploreCl
 
       {/* Section 4: FAQ */}
       <motion.section
-        initial="hidden"
+        initial={isMobile ? "visible" : "hidden"}
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
@@ -397,7 +400,7 @@ export const SEOContent = React.memo(({ isDarkMode, language = 'en', onExploreCl
 
       {/* Section 5: CTA */}
       <motion.section
-        initial="hidden"
+        initial={isMobile ? "visible" : "hidden"}
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}

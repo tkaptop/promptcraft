@@ -157,6 +157,10 @@
   "indexeddb_mode": "Utiliser le mode IndexedDB (capacité illimitée)",
   "auto_save_to_folder": "Sauvegarde automatique dans le dossier local",
   "templates": "Gestion des modèles",
+  "home": "Accueil",
+  "editor": "Éditeur",
+  "banks": "Banques",
+  "details": "Détails",
   "import_json": "Importer JSON",
   "export_all": "Tout exporter",
   "reset_system": "Réinitialiser les préréglages",
@@ -199,5 +203,6 @@
   "legal_i_understand": "J'ai compris",
   "legal_last_updated": "Dernière mise à jour",
   "wechat_scan_to_add": "Scannez pour ajouter l'auteur sur WeChat",
-  "wechat_connect": "Se connecter sur WeChat"
+  "wechat_connect": "Se connecter sur WeChat",
+  "firework_show": "Feux d'artifice du Nouvel An"
 }

@@ -157,6 +157,10 @@
   "indexeddb_mode": "IndexedDB 모드 사용 (무제한 용량)",
   "auto_save_to_folder": "로컬 폴더에 자동 저장",
   "templates": "템플릿 관리",
+  "home": "홈",
+  "editor": "편집기",
+  "banks": "뱅크",
+  "details": "상세",
   "import_json": "JSON 가져오기",
   "export_all": "전체 내보내기",
   "reset_system": "프리셋 초기화",
@@ -199,5 +203,6 @@
   "legal_i_understand": "확인했습니다",
   "legal_last_updated": "최종 업데이트",
   "wechat_scan_to_add": "스캔하여 WeChat에서 작성자 추가",
-  "wechat_connect": "WeChat에서 연결"
+  "wechat_connect": "WeChat에서 연결",
+  "firework_show": "새해 불꽃놀이"
 }

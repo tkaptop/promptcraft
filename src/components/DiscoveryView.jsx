@@ -84,13 +84,18 @@ export const DiscoveryView = React.memo(({
   
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
+  // Scroll to top handler for CTA button (shared by mobile and desktop)
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (isMobile) {
     // ... 保持移动端逻辑不变
     return (
       <main
         className={`fixed inset-0 z-10 flex flex-col overflow-y-auto pb-32 md:pb-20 ${isDarkMode ? 'dark-gradient-bg' : 'mesh-gradient-bg'}`}
       >
-        <div className="flex flex-col w-full min-h-full px-2 py-8 gap-6 pt-safe">
+        <div className="flex flex-col w-full px-2 py-8 gap-6 pt-safe">
           {/* 1. 顶部 SVG 标题区域 */}
           <div className="w-full flex flex-col items-center px-4 gap-2">
             <h1 className="sr-only">{getTranslation(language, 'app_sr_title')}</h1>
@@ -146,15 +151,23 @@ export const DiscoveryView = React.memo(({
               </article>
             ))}
           </section>
+
+          {/* SEO Content Sections (Mobile) */}
+          <SEOContent
+            isDarkMode={isDarkMode}
+            language={language}
+            onExploreClick={scrollToTop}
+          />
+
+          {/* Footer (Mobile) */}
+          <Footer
+            isDarkMode={isDarkMode}
+            language={language}
+          />
         </div>
       </main>
     );
   }
-
-  // Scroll to top handler for CTA button
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   return (
     <main
@@ -335,9 +348,9 @@ export const DiscoveryView = React.memo(({
                   fireworkRef.current?.start();
                 }}
                 className="transition-all duration-300 transform hover:scale-110 active:scale-95 outline-none"
-                title="新年烟花秀"
+                title={getTranslation(language, 'firework_show')}
               >
-                <img src="/2026.png" alt="2026 烟花秀" className="h-10 md:h-12 w-auto" />
+                <img src="/2026.png" alt={getTranslation(language, 'firework_show')} className="h-10 md:h-12 w-auto" />
               </button>
             </div>
           )}

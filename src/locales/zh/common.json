@@ -157,6 +157,10 @@
   "indexeddb_mode": "使用 IndexedDB 模式（无容量限制）",
   "auto_save_to_folder": "自动保存到本地文件夹",
   "templates": "模板管理",
+  "home": "主页",
+  "editor": "编辑器",
+  "banks": "词库",
+  "details": "详情页",
   "import_json": "导入 JSON",
   "export_all": "全部导出",
   "reset_system": "重置预设",
@@ -199,5 +203,6 @@
   "legal_i_understand": "我已了解",
   "legal_last_updated": "最后更新",
   "wechat_scan_to_add": "扫码添加作者微信",
-  "wechat_connect": "微信联系"
+  "wechat_connect": "微信联系",
+  "firework_show": "新年烟花秀"
 }

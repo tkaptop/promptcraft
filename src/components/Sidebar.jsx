@@ -76,7 +76,7 @@ export const Sidebar = ({
           <button 
             onClick={onHome}
             className={`p-2 group transition-colors ${activeTab === 'home' ? (isDarkMode ? 'text-[#FB923C]' : 'text-[#EA580C]') : (isDarkMode ? 'text-[#8E9196]' : 'text-[#6B7280]')} hover:text-[#F97316]`}
-            title="主页"
+            title={t('home')}
           >
             <HomeIcon size={24} />
           </button>
@@ -84,7 +84,7 @@ export const Sidebar = ({
           <button 
             onClick={onDetail}
             className={`p-2 group transition-colors ${activeTab === 'details' ? (isDarkMode ? 'text-[#FB923C]' : 'text-[#EA580C]') : (isDarkMode ? 'text-[#8E9196]' : 'text-[#6B7280]')} hover:text-[#F97316]`}
-            title="详情页"
+            title={t('details')}
           >
             <ListIcon size={24} />
           </button>

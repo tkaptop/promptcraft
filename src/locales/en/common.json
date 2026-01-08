@@ -157,6 +157,10 @@
   "indexeddb_mode": "Use IndexedDB mode (unlimited capacity)",
   "auto_save_to_folder": "Auto-save to local folder",
   "templates": "Template Management",
+  "home": "Home",
+  "editor": "Editor",
+  "banks": "Banks",
+  "details": "Details",
   "import_json": "Import JSON",
   "export_all": "Export All",
   "reset_system": "Reset Presets",
@@ -199,5 +203,6 @@
   "legal_i_understand": "I Understand",
   "legal_last_updated": "Last updated",
   "wechat_scan_to_add": "Scan to add author on WeChat",
-  "wechat_connect": "Connect on WeChat"
+  "wechat_connect": "Connect on WeChat",
+  "firework_show": "New Year Fireworks"
 }

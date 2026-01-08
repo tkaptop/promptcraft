@@ -157,6 +157,10 @@
   "indexeddb_mode": "IndexedDBモードを使用（容量無制限）",
   "auto_save_to_folder": "ローカルフォルダに自動保存",
   "templates": "テンプレート管理",
+  "home": "ホーム",
+  "editor": "エディター",
+  "banks": "バンク",
+  "details": "詳細",
   "import_json": "JSONをインポート",
   "export_all": "すべてエクスポート",
   "reset_system": "プリセットをリセット",
@@ -199,5 +203,6 @@
   "legal_i_understand": "了解しました",
   "legal_last_updated": "最終更新日",
   "wechat_scan_to_add": "スキャンして作者をWeChatに追加",
-  "wechat_connect": "WeChatで繋がる"
+  "wechat_connect": "WeChatで繋がる",
+  "firework_show": "新年花火ショー"
 }

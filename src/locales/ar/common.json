@@ -157,6 +157,10 @@
   "indexeddb_mode": "استخدام وضع IndexedDB (سعة غير محدودة)",
   "auto_save_to_folder": "حفظ تلقائي في المجلد المحلي",
   "templates": "إدارة القوالب",
+  "home": "الرئيسية",
+  "editor": "المحرر",
+  "banks": "البنوك",
+  "details": "التفاصيل",
   "import_json": "استيراد JSON",
   "export_all": "تصدير الكل",
   "reset_system": "إعادة تعيين القوالب المسبقة",
@@ -199,5 +203,6 @@
   "legal_i_understand": "فهمت",
   "legal_last_updated": "آخر تحديث",
   "wechat_scan_to_add": "امسح لإضافة المؤلف على WeChat",
-  "wechat_connect": "الاتصال عبر WeChat"
+  "wechat_connect": "الاتصال عبر WeChat",
+  "firework_show": "ألعاب نارية للعام الجديد"
 }
