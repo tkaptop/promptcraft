@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { INITIAL_TEMPLATES_CONFIG } from '../src/data/templates.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
@@ -61,29 +60,17 @@ function buildRobotsTxt({ siteUrl }) {
 const siteUrl = normalizeSiteUrl(process.env.SITE_URL || process.env.VITE_SITE_URL || 'https://www.bananaprompt.tech');
 const localeCodes = uniqSorted(readLocaleCodes());
 
-const baseUrls = [];
-// Core pages
-baseUrls.push(`${siteUrl}/`);
-baseUrls.push(`${siteUrl}/showcase/`);
-baseUrls.push(`${siteUrl}/terms/`);
-baseUrls.push(`${siteUrl}/privacy/`);
+const urls = [];
 
-// Showcase detail pages (one per template)
-for (const tpl of INITIAL_TEMPLATES_CONFIG || []) {
-  if (!tpl?.id) continue;
-  baseUrls.push(`${siteUrl}/showcase/${encodeURIComponent(tpl.id)}/`);
-}
-
-// Language variants (query-based, consistent with app's lang resolver)
-const localizedUrls = [];
+// Home page + language variants (query-based, consistent with app's lang resolver)
+urls.push(`${siteUrl}/`);
 for (const code of localeCodes) {
-  const lang = encodeURIComponent(code);
-  for (const u of baseUrls) {
-    localizedUrls.push(`${u}?lang=${lang}`);
-  }
+  urls.push(`${siteUrl}/?lang=${encodeURIComponent(code)}`);
 }
 
-const urls = [...baseUrls, ...localizedUrls];
+// Legal pages (single version; content is English-only for now)
+urls.push(`${siteUrl}/terms/`);
+urls.push(`${siteUrl}/privacy/`);
 
 const today = new Date().toISOString().slice(0, 10);
 const sitemapXml = buildSitemapXml({ siteUrl, urls: uniqSorted(urls), lastmod: today });

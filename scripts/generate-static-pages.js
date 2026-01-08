@@ -247,6 +247,9 @@ function makePage({ pathname, title, description, ogImage, bodyHtml, ldJson, lan
 function run() {
   if (!fs.existsSync(distDir)) throw new Error('dist/ not found. Run `npm run build` first.');
 
+  // Note: We intentionally do NOT generate per-template showcase pages.
+  // Reason: templates × languages can create excessive URL variants and duplicate content.
+  // The app itself already provides a rich in-app modal/detail experience.
   const templates = (INITIAL_TEMPLATES_CONFIG || []).filter((t) => t?.id);
 
   // Terms page
@@ -299,75 +302,9 @@ function run() {
     writePage({ outDir: path.join(distDir, 'privacy'), html });
   }
 
-  // Showcase list page
-  {
-    const pathname = '/showcase/';
-    const title = `Showcase - ${templates.length} AI Prompt Templates | Banana Prompt`;
-    const description = `Browse ${templates.length} curated AI prompt templates for Nano Banana.`;
-    const contentHtml = showcaseListHtml(templates);
-    const body = layout({
-      pageTitle: 'Showcase',
-      subtitle: `${templates.length} templates • Updated: ${new Date().toISOString().slice(0, 10)}`,
-      contentHtml,
-      backHref: '/',
-    });
-    const ldJson = {
-      '@context': 'https://schema.org',
-      '@type': 'CollectionPage',
-      name: 'Showcase',
-      url: `${SITE_URL}${pathname}`,
-    };
-    const html = makePage({
-      pathname,
-      title,
-      description,
-      ogImage: `${SITE_URL}/og-image.png`,
-      bodyHtml: body,
-      ldJson,
-      lang: 'en',
-    });
-    writePage({ outDir: path.join(distDir, 'showcase'), html });
-  }
-
-  // Showcase detail pages
-  for (const tpl of templates) {
-    const pathname = `/showcase/${encodeURIComponent(tpl.id)}/`;
-    const name = templateName(tpl, 'en');
-    const content = templateContent(tpl, 'en');
-    const title = `${name} - Banana Prompt Showcase`;
-    const description = truncate(content, 160) || `View prompt template: ${name}`;
-    const ogImage = tpl.imageUrl ? tpl.imageUrl : `${SITE_URL}/og-image.png`;
-
-    const contentHtml = templateDetailHtml(tpl);
-    const body = layout({
-      pageTitle: name,
-      subtitle: 'Banana Prompt Showcase Template',
-      contentHtml,
-      backHref: '/showcase/',
-    });
-    const ldJson = {
-      '@context': 'https://schema.org',
-      '@type': 'CreativeWork',
-      name,
-      url: `${SITE_URL}${pathname}`,
-      image: ogImage,
-      description,
-    };
-    const html = makePage({
-      pathname,
-      title,
-      description,
-      ogImage,
-      bodyHtml: body,
-      ldJson,
-      lang: 'en',
-    });
-    writePage({ outDir: path.join(distDir, 'showcase', tpl.id), html });
-  }
-
   console.log('✅ Static SEO pages generated into dist/');
   console.log(`- SITE_URL: ${SITE_URL}`);
-  console.log(`- Pages: /terms /privacy /showcase + ${templates.length} showcase details`);
+  console.log(`- Pages: /terms /privacy (showcase pages are intentionally NOT generated)`);
 }
 
 run();
