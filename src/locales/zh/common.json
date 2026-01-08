@@ -175,5 +175,17 @@
   "credits_based_on": "本项目基于开源项目 PromptFill 开发。",
   "credits_thanks": "特别鸣谢原作者：",
   "manifesto_text": "为创作者而生。所有数据本地存储；我们绝不上传您的提示内容。",
-  "tap_to_view_details": "点击或上滑查看详情"
+  "tap_to_view_details": "点击或上滑查看详情",
+  "footer_brand_desc": "专为 Nano Banana 设计的专业 AI 图像提示词库。浏览精选模板，自定义变量，生成精美的 AI 图像。",
+  "footer_made_with": "用",
+  "footer_by": "制作",
+  "footer_resources": "资源",
+  "footer_legal": "法律条款",
+  "footer_contact_us": "联系我们",
+  "footer_terms": "服务条款",
+  "footer_privacy": "隐私政策",
+  "footer_all_rights": "保留所有权利。",
+  "footer_wechat_official": "微信公众号",
+  "legal_i_understand": "我已了解",
+  "legal_last_updated": "最后更新"
 }

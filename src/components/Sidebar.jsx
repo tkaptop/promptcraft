@@ -63,7 +63,7 @@ export const Sidebar = ({
   return (
     <aside 
       style={containerStyle}
-      className="relative flex flex-col justify-between items-center py-8 mr-4 flex-shrink-0"
+      className="relative flex flex-col items-center py-8 mr-4 flex-shrink-0"
     >
       
       {/* 上部分：Logo + 导航按钮 */}
@@ -158,6 +158,9 @@ export const Sidebar = ({
           </button>
         </div>
       </div>
+
+      {/* 中间留白：把下方设置组稳定推到底部（避免 Showcase 和语言切换挤在一起） */}
+      <div className="flex-1 w-full" />
 
       {/* 下部分：设置组 */}
       <div className="flex flex-col items-center gap-6 w-full">
