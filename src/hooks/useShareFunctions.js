@@ -463,7 +463,7 @@ export const useShareFunctions = (
       }
 
       const templateName = getTemplateName(activeTemplate.id, activeTemplate, language);
-      const tokenText = `「Prompt分享」我的新模版：${templateName}\n复制整段文字，打开【提示词填空器】即可导入：\n#pf$${finalToken}$`;
+      const tokenText = `「Prompt分享」我的新模版：${templateName}\n复制整段文字，打开【Banana Prompt】即可导入：\n#pf$${finalToken}$`;
 
       const success = await copyToClipboard(tokenText);
       if (success) {

@@ -3,6 +3,7 @@ import {
   ImageIcon, ArrowUpRight
 } from 'lucide-react';
 import { getTemplateName } from '../utils/i18n';
+import { getTranslation } from '../constants/translations';
 import { Sidebar } from './Sidebar';
 import { FireworkEffect } from './FireworkEffect';
 import { SEOContent } from './SEOContent';
@@ -90,14 +91,14 @@ export const DiscoveryView = React.memo(({
         <div className="flex flex-col w-full min-h-full px-2 py-8 gap-6 pt-safe">
           {/* 1. 顶部 SVG 标题区域 */}
           <div className="w-full flex flex-col items-center px-4 gap-2">
-            <h1 className="sr-only">提示词填空器 (Prompt Fill) - 专业的 AI 提示词管理与优化工具</h1>
+            <h1 className="sr-only">{getTranslation(language, 'app_sr_title')}</h1>
             <img 
               src={isDarkMode ? "/Title_Dark.svg" : "/Title.svg"} 
-              alt="提示词填空器 (Prompt Fill) - 专业的 AI 提示词管理与优化工具" 
+              alt={getTranslation(language, 'app_sr_title')} 
               className="w-full max-w-[220px] h-auto"
             />
             <p className={`text-[10px] opacity-70 text-center px-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              专业的 AI 提示词管理与优化工具，让提示词填充更高效
+              {getTranslation(language, 'app_subtitle')}
             </p>
           </div>
 
@@ -249,14 +250,14 @@ export const DiscoveryView = React.memo(({
               {/* Left Side: Logo & Slogan */}
               <header className="flex flex-col justify-center items-center lg:items-start lg:w-[280px] xl:w-[320px] flex-shrink-0 px-4 lg:pl-6 lg:pr-2 gap-6">
                   <div className="w-full max-w-[320px] scale-75 sm:scale-85 lg:scale-90 xl:scale-100 origin-center lg:origin-left flex flex-col gap-3">
-                      <h1 className="sr-only">提示词填空器 (Prompt Fill) - 专业的 AI 提示词管理与优化工具</h1>
+                      <h1 className="sr-only">{getTranslation(language, 'app_sr_title')}</h1>
                       <img 
                           src={isDarkMode ? "/Title_Dark.svg" : "/Title.svg"} 
-                          alt="提示词填空器 (Prompt Fill) - 专业的 AI 提示词管理与优化工具" 
+                          alt={getTranslation(language, 'app_sr_title')} 
                           className="w-full h-auto"
                       />
                       <p className={`text-xs lg:text-sm font-medium leading-relaxed opacity-80 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        提示词填空器 (Prompt Fill) 是一款专业的 AI 提示词管理工具，支持模版化、变量填充及一键优化。
+                        {getTranslation(language, 'app_description')}
                       </p>
                   </div>
                   <div className="w-full scale-90 lg:scale-95 xl:scale-100 origin-center lg:origin-left">

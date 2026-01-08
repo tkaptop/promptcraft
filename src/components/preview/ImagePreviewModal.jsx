@@ -439,7 +439,7 @@ const ImagePreviewModal = React.memo(({
 
                             <div className="flex items-center justify-between px-2">
                               <p className="text-[10px] text-white/30 font-bold tracking-widest uppercase">
-                                  Prompt Fill Original
+                                  Banana Prompt Original
                               </p>
                               <div className="flex gap-4">
                                   <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>

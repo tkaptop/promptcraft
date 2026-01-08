@@ -83,7 +83,7 @@ export const TemplatesSidebar = React.memo(({
          <div className="flex items-center justify-between mb-6">
              <div className="flex flex-col items-start gap-1">
                   <h1 className={`${isMobile ? 'text-[18px]' : 'text-[22px]'} font-black tracking-tight text-orange-500 flex items-baseline gap-2`}>
-                      提示词填空器
+                      Banana Prompt
                   </h1>
              </div>
              
