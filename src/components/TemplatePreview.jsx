@@ -102,7 +102,18 @@ export const TemplatePreview = React.memo(({
     setEditImageIndex(0);
   }, [activeTemplate.id]);
 
-  const templateLangs = activeTemplate.language ? (Array.isArray(activeTemplate.language) ? activeTemplate.language : [activeTemplate.language]) : ['cn', 'en'];
+  const templateLangsRaw = activeTemplate.language
+    ? (Array.isArray(activeTemplate.language) ? activeTemplate.language : [activeTemplate.language])
+    : ['cn', 'en'];
+
+  // 统一归一化：cn -> zh（模板内容语言只支持 zh/en）
+  const templateLangs = templateLangsRaw
+    .filter(Boolean)
+    .map((code) => {
+      const primary = String(code).toLowerCase().split('-')[0];
+      return primary === 'cn' ? 'zh' : primary;
+    })
+    .filter((v, idx, arr) => arr.indexOf(v) === idx);
   
   // 自动切换到模板支持的语言
   React.useEffect(() => {
@@ -110,7 +121,7 @@ export const TemplatePreview = React.memo(({
       // 如果当前语言不支持，切换到模板支持的第一个语言
       setLanguage(templateLangs[0]);
     }
-  }, [activeTemplate.id, templateLangs, language]);
+  }, [activeTemplate.id, templateLangs, language, setLanguage]);
 
   // 变量解析工具函数：从变量名中提取 baseKey 和 groupId
   const parseVariableName = (varName) => {

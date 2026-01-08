@@ -42,6 +42,9 @@ const ImagePreviewModal = React.memo(({
   // 早期返回：如果没有图片预览，不渲染组件
   if (!zoomedImage) return null;
 
+  // 模板内容语言只支持 zh/en：非 zh 一律展示 en
+  const templateContentLang = (language === 'zh') ? 'zh' : 'en';
+
   // 根据 zoomedImage 找到对应的模板
   const template = React.useMemo(() => {
     if (!templates) return null;
@@ -292,7 +295,7 @@ const ImagePreviewModal = React.memo(({
                         onTouchStart={(e) => e.stopPropagation()}
                         onTouchMove={(e) => e.stopPropagation()}
                       >
-                        {getLocalized(template?.content, language)}
+                        {getLocalized(template?.content, templateContentLang)}
                       </div>
                   </div>
 
@@ -419,7 +422,7 @@ const ImagePreviewModal = React.memo(({
                                 <div className="h-px flex-1 bg-white/5"></div>
                             </div>
                             <div className={`text-white/80 leading-relaxed whitespace-pre-wrap font-medium overflow-y-auto custom-scrollbar-white pr-4 text-base md:text-lg max-h-[40vh]`}>
-                                {getLocalized(template.content, language)}
+                                {getLocalized(template.content, templateContentLang)}
                             </div>
                         </div>
 

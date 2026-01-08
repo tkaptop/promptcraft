@@ -119,10 +119,22 @@ export const TemplateEditor = React.memo(({
     border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid rgba(0, 0, 0, 0.05)',
   } : {};
 
-  // 模板支持的语言
-  const templateLangs = activeTemplate?.language
+  // 模板内容语言只支持 zh/en；非中文用户强制显示英文模板内容
+  const templateLangsRaw = activeTemplate?.language
     ? (Array.isArray(activeTemplate.language) ? activeTemplate.language : [activeTemplate.language])
     : ['cn', 'en'];
+
+  const normalizedTemplateLangs = templateLangsRaw
+    .filter(Boolean)
+    .map((code) => {
+      const primary = String(code).toLowerCase().split('-')[0];
+      return primary === 'cn' ? 'zh' : primary;
+    })
+    .filter((v, idx, arr) => arr.indexOf(v) === idx);
+
+  const templateLangs = (language === 'zh')
+    ? (normalizedTemplateLangs.length > 0 ? normalizedTemplateLangs : ['zh', 'en'])
+    : (normalizedTemplateLangs.includes('en') ? ['en'] : (normalizedTemplateLangs.length > 0 ? [normalizedTemplateLangs[0]] : ['en']));
 
   const showLanguageToggle = templateLangs.length > 1;
   const getLangShortLabel = (code) => {

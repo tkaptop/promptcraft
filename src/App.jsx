@@ -8,7 +8,7 @@ import { INITIAL_TEMPLATES_CONFIG, TEMPLATE_TAGS, SYSTEM_DATA_VERSION, PUBLIC_SH
 import { INITIAL_BANKS, INITIAL_DEFAULTS, INITIAL_CATEGORIES } from './data/banks';
 
 // ====== 导入常量配置 ======
-import { getTranslation, ensureTranslations, TRANSLATIONS } from './constants/translations';
+import { getTranslation, ensureTranslations, TRANSLATIONS, LANGUAGE_CODES } from './constants/translations';
 import { PREMIUM_STYLES, CATEGORY_STYLES, TAG_STYLES, TAG_LABELS } from './constants/styles';
 import { MASONRY_STYLES } from './constants/masonryStyles';
 
@@ -58,6 +58,55 @@ const App = () => {
   const [templateLanguage, setTemplateLanguage] = useStickyState(getSystemLanguage(), "app_template_language_v1"); // 模板内容语言
   const [activeTemplateId, setActiveTemplateId] = useStickyState("tpl_default", "app_active_template_id_v4");
 
+  // --- URL/请求语言识别（参考 nbpro：URL 指定优先，其次浏览器语言） ---
+  const normalizeLangCode = (lang) => {
+    const raw = String(lang || '').toLowerCase().trim();
+    const primary = raw.split('-')[0];
+    if (primary === 'cn') return 'zh';
+    return primary;
+  };
+
+  const getLanguageFromUrl = () => {
+    if (typeof window === 'undefined') return null;
+
+    const supported = new Set(LANGUAGE_CODES);
+
+    // 1) Query: ?lang=xx / ?language=xx / ?locale=xx
+    const hashQuery = window.location.hash.includes('?')
+      ? window.location.hash.split('?')[1]
+      : '';
+    const paramSource = window.location.search
+      ? window.location.search
+      : (hashQuery ? `?${hashQuery}` : '');
+    if (paramSource) {
+      const params = new URLSearchParams(paramSource.startsWith('?') ? paramSource.slice(1) : paramSource);
+      const q = normalizeLangCode(params.get('lang') || params.get('language') || params.get('locale'));
+      if (q === 'zh' || supported.has(q)) return q;
+    }
+
+    // 2) Path prefix: /en /zh /ja ...
+    const parts = window.location.pathname.split('/').filter(Boolean);
+    const first = normalizeLangCode(parts[0]);
+    if (first === 'zh' || supported.has(first)) return first;
+
+    // 兼容部署在子路径（例如 /app/zh/...）：尝试第二段
+    const second = normalizeLangCode(parts[1]);
+    if (second === 'zh' || supported.has(second)) return second;
+
+    return null;
+  };
+
+  // 首次进入：如果 URL 显式带语言，则覆盖当前语言
+  const appliedUrlLangRef = useRef(false);
+  useEffect(() => {
+    if (appliedUrlLangRef.current) return;
+    const urlLang = getLanguageFromUrl();
+    if (urlLang && urlLang !== language) {
+      setLanguage(urlLang);
+    }
+    appliedUrlLangRef.current = true;
+  }, [language, setLanguage]);
+
   // 语言码迁移：兼容历史 cn -> zh（避免下拉框无选中项/翻译加载错位）
   useEffect(() => {
     const raw = (language || '').toLowerCase();
@@ -68,12 +117,26 @@ const App = () => {
   }, [language, setLanguage]);
 
   useEffect(() => {
-    const raw = (templateLanguage || '').toLowerCase();
-    const primary = raw.split('-')[0];
-    if (primary === 'cn' || primary === 'zh') {
-      if (templateLanguage !== 'zh') setTemplateLanguage('zh');
+    // 模板内容语言只支持 zh/en：cn/zh* -> zh，其余 -> en
+    const normalized = normalizeLangCode(templateLanguage) === 'zh' ? 'zh' : 'en';
+    if (templateLanguage !== normalized) {
+      setTemplateLanguage(normalized);
     }
   }, [templateLanguage, setTemplateLanguage]);
+
+  // 非中文用户：模板内容强制使用英文（不影响全站 UI 语言）
+  useEffect(() => {
+    if (language !== 'zh' && templateLanguage !== 'en') {
+      setTemplateLanguage('en');
+    }
+  }, [language, templateLanguage, setTemplateLanguage]);
+
+  // 同步 <html lang/dir>（让浏览器/SEO/无障碍跟随全站语言）
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.documentElement.lang = language === 'zh' ? 'zh-CN' : (language || 'en');
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+  }, [language]);
   
   // Derived State: Current Active Template
   const activeTemplate = useMemo(() => {
@@ -105,9 +168,12 @@ const App = () => {
       .map(l => (String(l).toLowerCase().split('-')[0] === 'cn' ? 'zh' : String(l).toLowerCase().split('-')[0]));
     if (normalizedLangs.length === 0) return;
     if (!normalizedLangs.includes(templateLanguage)) {
-      setTemplateLanguage(normalizedLangs[0]);
+      // 模板内容语言只有 zh/en：优先根据全站语言选择（非 zh -> en）
+      const preferred = language === 'zh' ? 'zh' : 'en';
+      const next = normalizedLangs.includes(preferred) ? preferred : normalizedLangs[0];
+      setTemplateLanguage(next);
     }
-  }, [activeTemplate, templateLanguage, setTemplateLanguage]);
+  }, [activeTemplate, templateLanguage, setTemplateLanguage, language]);
   
   const [lastAppliedDataVersion, setLastAppliedDataVersion] = useStickyState("", "app_data_version_v1");
   const [themeMode, setThemeMode] = useStickyState("system", "app_theme_mode_v1");

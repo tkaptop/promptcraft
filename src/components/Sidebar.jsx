@@ -131,7 +131,7 @@ export const Sidebar = ({
             <RefreshIcon size={24} />
           </button>
 
-          <button 
+          <button
             onClick={() => {
               if (onShowcase) return onShowcase();
               const resolvedNanoLocale = ((language === "zh" || language === "cn") ? "zh" : language);
