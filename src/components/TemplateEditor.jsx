@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
-import { Eye, Edit3, Share2, Copy, Check, ImageIcon, ExternalLink, Pencil, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
+import { Eye, Edit3, Share2, Copy, Check, ImageIcon, ExternalLink, Pencil, ChevronLeft, ChevronRight, Plus, Trash2, ChevronDown } from 'lucide-react';
 import { getLocalized, getTemplateName } from '../utils/i18n';
+import { SUPPORTED_LANGUAGES } from '../constants/translations';
 import { TemplatePreview } from './TemplatePreview';
 import { VisualEditor } from './VisualEditor';
 import { EditorToolbar } from './EditorToolbar';
@@ -123,8 +124,6 @@ export const TemplateEditor = React.memo(({
     ? (Array.isArray(activeTemplate.language) ? activeTemplate.language : [activeTemplate.language])
     : ['cn', 'en'];
 
-  const supportsChinese = templateLangs.includes('cn');
-  const supportsEnglish = templateLangs.includes('en');
   const showLanguageToggle = templateLangs.length > 1;
 
   return (
@@ -147,21 +146,21 @@ export const TemplateEditor = React.memo(({
             {/* 第一行：标题、语言切换与模式切换 */}
             <div className="w-full flex items-center justify-between gap-4 shrink-0">
               <div className="flex items-center gap-3 overflow-hidden">
-                {/* Language Toggle - Mobile: Left of Title */}
+                {/* Language Dropdown - Mobile: Left of Title */}
                 {isMobileDevice && showLanguageToggle && (
-                  <div className={`premium-toggle-container ${isDarkMode ? 'dark' : 'light'} scale-90 origin-left shrink-0`}>
-                    <button
-                      onClick={() => supportsChinese && setTemplateLanguage('cn')}
-                      className={`premium-toggle-item ${isDarkMode ? 'dark' : 'light'} ${templateLanguage === 'cn' ? 'is-active' : ''} !px-2`}
+                  <div className="relative shrink-0">
+                    <select
+                      value={templateLanguage}
+                      onChange={(e) => setTemplateLanguage(e.target.value)}
+                      className={`appearance-none text-[11px] font-bold px-2.5 py-1.5 pr-6 rounded-lg cursor-pointer transition-colors ${isDarkMode ? 'bg-white/10 text-gray-300 hover:bg-white/15' : 'bg-orange-50 text-gray-700 hover:bg-orange-100'}`}
                     >
-                      CN
-                    </button>
-                    <button
-                      onClick={() => supportsEnglish && setTemplateLanguage('en')}
-                      className={`premium-toggle-item ${isDarkMode ? 'dark' : 'light'} ${templateLanguage === 'en' ? 'is-active' : ''} !px-2`}
-                    >
-                      EN
-                    </button>
+                      {templateLangs.map((code) => (
+                        <option key={code} value={code}>
+                          {SUPPORTED_LANGUAGES[code]?.nativeName || code.toUpperCase()}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown size={10} className={`absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                   </div>
                 )}
 
@@ -171,37 +170,21 @@ export const TemplateEditor = React.memo(({
                   </h1>
                 )}
 
-                {/* Language Toggle - Desktop: Right of Title */}
+                {/* Language Dropdown - Desktop: Right of Title */}
                 {!isMobileDevice && showLanguageToggle && (
-                  <div className={`premium-toggle-container ${isDarkMode ? 'dark' : 'light'} shrink-0`}>
-                    <button
-                      onClick={() => supportsChinese && setTemplateLanguage('cn')}
-                      disabled={!supportsChinese}
-                      className={`
-                        premium-toggle-item ${isDarkMode ? 'dark' : 'light'}
-                        ${!supportsChinese
-                          ? 'opacity-30 cursor-not-allowed'
-                          : templateLanguage === 'cn'
-                            ? 'is-active'
-                            : ''}
-                      `}
+                  <div className="relative shrink-0">
+                    <select
+                      value={templateLanguage}
+                      onChange={(e) => setTemplateLanguage(e.target.value)}
+                      className={`appearance-none text-[11px] font-bold px-3 py-1.5 pr-7 rounded-lg cursor-pointer transition-colors ${isDarkMode ? 'bg-white/10 text-gray-300 hover:bg-white/15' : 'bg-orange-50 text-gray-700 hover:bg-orange-100'}`}
                     >
-                      CN
-                    </button>
-                    <button
-                      onClick={() => supportsEnglish && setTemplateLanguage('en')}
-                      disabled={!supportsEnglish}
-                      className={`
-                        premium-toggle-item ${isDarkMode ? 'dark' : 'light'}
-                        ${!supportsEnglish
-                          ? 'opacity-30 cursor-not-allowed'
-                          : templateLanguage === 'en'
-                            ? 'is-active'
-                            : ''}
-                      `}
-                    >
-                      EN
-                    </button>
+                      {templateLangs.map((code) => (
+                        <option key={code} value={code}>
+                          {SUPPORTED_LANGUAGES[code]?.nativeName || code.toUpperCase()}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown size={12} className={`absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                   </div>
                 )}
               </div>
