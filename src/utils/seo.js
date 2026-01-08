@@ -58,16 +58,21 @@ function getExplicitLangFromUrl() {
   return normalizeLang(params.get('lang') || params.get('language') || params.get('locale'));
 }
 
-function buildCanonicalUrl({ siteUrl, language }) {
+function getCurrentPathname() {
+  if (typeof window === 'undefined') return '/';
+  return window.location?.pathname || '/';
+}
+
+function buildCanonicalUrl({ siteUrl, language, pathname }) {
   const base = getSiteUrl(siteUrl);
   if (!base) return null;
 
   // Canonical 只保留 lang（避免分享/追踪参数污染索引）
-  // - 如果 URL 没显式指定语言，则 canonical 保持为根路径（与静态 index.html 保持一致）
-  // - 如果 URL 显式 ?lang=xx，则 canonical 指向对应语言入口，便于多语言收录
+  // - 如果 URL 没显式指定语言，则 canonical 保持为当前路径（不带 query）
+  // - 如果 URL 显式 ?lang=xx，则 canonical 指向当前路径 + ?lang=xx（便于多语言收录）
   const explicit = getExplicitLangFromUrl();
   const lang = explicit || normalizeLang(language);
-  const u = new URL('/', base);
+  const u = new URL(pathname || getCurrentPathname(), base);
   if (explicit) u.searchParams.set('lang', lang);
   return u.toString();
 }
@@ -103,11 +108,12 @@ export function applyRuntimeSEO({
   title,
   description,
   ogImage = '/og-image.png',
+  pathname,
 } = {}) {
   if (typeof document === 'undefined') return;
 
   const base = getSiteUrl(siteUrl || (typeof import.meta !== 'undefined' ? import.meta.env?.VITE_SITE_URL : ''));
-  const canonical = buildCanonicalUrl({ siteUrl: base, language });
+  const canonical = buildCanonicalUrl({ siteUrl: base, language, pathname });
 
   if (title) document.title = title;
 
@@ -144,11 +150,15 @@ export function applyRuntimeSEO({
   if (base) {
     // 先清理旧的 alternates（避免重复堆积）
     document.querySelectorAll('link[rel="alternate"][hreflang]').forEach((n) => n.remove());
-    ensureLink('alternate', { hreflang: 'x-default', href: `${base}/` });
+    const path = pathname || getCurrentPathname();
+    const xDefault = new URL(path, base).toString();
+    ensureLink('alternate', { hreflang: 'x-default', href: xDefault });
 
     const codes = Array.from(new Set(LANGUAGE_CODES.map(normalizeLang))).filter(Boolean);
     for (const code of codes) {
-      const href = `${base}/?lang=${encodeURIComponent(code)}`;
+      const u = new URL(path, base);
+      u.searchParams.set('lang', code);
+      const href = u.toString();
       ensureLink('alternate', { hreflang: normalizeHreflang(code), href });
     }
   }

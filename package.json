@@ -7,7 +7,8 @@
     "dev": "vite --host",
     "dev:open": "vite --host --open",
     "seo:generate": "node scripts/generate-seo-files.js",
-    "build": "npm run sync-data && npm run seo:generate && vite build",
+    "pages:generate": "node scripts/generate-static-pages.js",
+    "build": "npm run sync-data && npm run seo:generate && vite build && npm run pages:generate",
     "sync-data": "node scripts/sync-data.js",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
