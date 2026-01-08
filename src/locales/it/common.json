@@ -72,6 +72,8 @@
   "or": "o",
   "upload_image": "Carica immagine",
   "change_image": "Cambia immagine",
+  "delete_image": "Elimina immagine",
+  "confirm_delete_image": "Sei sicuro di voler eliminare questa immagine?",
   "storage_mode": "Modalità di archiviazione",
   "use_browser_storage": "Memorizzazione del browser",
   "use_local_folder": "cartella locale",

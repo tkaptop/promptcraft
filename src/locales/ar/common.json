@@ -72,6 +72,8 @@
   "or": "أو",
   "upload_image": "رفع صورة",
   "change_image": "تغيير الصورة",
+  "delete_image": "حذف الصورة",
+  "confirm_delete_image": "هل أنت متأكد أنك تريد حذف هذه الصورة؟",
   "storage_mode": "وضع التخزين",
   "use_browser_storage": "تخزين المتصفح",
   "use_local_folder": "المجلد المحلي",

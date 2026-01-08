@@ -72,6 +72,8 @@
   "or": "或",
   "upload_image": "上传图片",
   "change_image": "更换图片",
+  "delete_image": "删除图片",
+  "confirm_delete_image": "确定要删除这张图片吗？",
   "storage_mode": "存储模式",
   "use_browser_storage": "浏览器存储",
   "use_local_folder": "本地文件夹",

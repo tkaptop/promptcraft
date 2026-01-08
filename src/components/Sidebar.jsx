@@ -61,7 +61,7 @@ export const Sidebar = ({
   return (
     <aside 
       style={containerStyle}
-      className="relative flex flex-col justify-between items-center py-8 mr-4 flex-shrink-0 h-[calc(100dvh-32px)] sticky top-4"
+      className="relative z-[600] flex flex-col justify-between items-center py-8 mr-4 flex-shrink-0 h-[calc(100dvh-32px)] sticky top-4"
     >
       
       {/* 上部分：Logo + 导航按钮 */}

@@ -72,6 +72,8 @@
   "or": "또는",
   "upload_image": "이미지 업로드",
   "change_image": "이미지 변경",
+  "delete_image": "이미지 삭제",
+  "confirm_delete_image": "이 이미지를 삭제하시겠습니까?",
   "storage_mode": "저장 모드",
   "use_browser_storage": "브라우저 저장소",
   "use_local_folder": "로컬 폴더",

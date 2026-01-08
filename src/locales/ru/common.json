@@ -72,6 +72,8 @@
   "or": "или",
   "upload_image": "Загрузить изображение",
   "change_image": "Сменить изображение",
+  "delete_image": "Удалить изображение",
+  "confirm_delete_image": "Вы уверены, что хотите удалить это изображение?",
   "storage_mode": "Режим хранения",
   "use_browser_storage": "Хранилище браузера",
   "use_local_folder": "Локальная папка",

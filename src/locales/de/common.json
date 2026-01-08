@@ -72,6 +72,8 @@
   "or": "oder",
   "upload_image": "Bild hochladen",
   "change_image": "Bild ändern",
+  "delete_image": "Bild löschen",
+  "confirm_delete_image": "Möchten Sie dieses Bild wirklich löschen?",
   "storage_mode": "Speichermodus",
   "use_browser_storage": "Browser-Speicher",
   "use_local_folder": "Lokaler Ordner",

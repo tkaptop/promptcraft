@@ -72,6 +72,8 @@
   "or": "ou",
   "upload_image": "Télécharger une image",
   "change_image": "Changer l'image",
+  "delete_image": "Supprimer l'image",
+  "confirm_delete_image": "Êtes-vous sûr de vouloir supprimer cette image ?",
   "storage_mode": "Mode de stockage",
   "use_browser_storage": "Stockage navigateur",
   "use_local_folder": "Dossier local",

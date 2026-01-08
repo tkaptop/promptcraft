@@ -72,6 +72,8 @@
   "or": "又は",
   "upload_image": "画像をアップロード",
   "change_image": "画像を変更",
+  "delete_image": "画像を削除",
+  "confirm_delete_image": "この画像を削除しますか？",
   "storage_mode": "ストレージモード",
   "use_browser_storage": "ブラウザストレージ",
   "use_local_folder": "ローカルフォルダ",
