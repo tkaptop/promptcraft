@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Eye, Edit3, Share2, Copy, Check, ImageIcon, ExternalLink, Pencil, ChevronLeft, ChevronRight, Plus, Trash2, ChevronDown } from 'lucide-react';
+import { Eye, Edit3, Share2, Copy, Check, ImageIcon, ExternalLink, Pencil, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { getLocalized, getTemplateName } from '../utils/i18n';
 import { SUPPORTED_LANGUAGES } from '../constants/translations';
 import { TemplatePreview } from './TemplatePreview';
@@ -125,6 +125,11 @@ export const TemplateEditor = React.memo(({
     : ['cn', 'en'];
 
   const showLanguageToggle = templateLangs.length > 1;
+  const getLangShortLabel = (code) => {
+    if (code === 'cn' || code === 'zh') return 'CN';
+    if (code === 'en') return 'EN';
+    return String(code || '').toUpperCase();
+  };
 
   return (
     <div
@@ -148,19 +153,17 @@ export const TemplateEditor = React.memo(({
               <div className="flex items-center gap-3 overflow-hidden">
                 {/* Language Dropdown - Mobile: Left of Title */}
                 {isMobileDevice && showLanguageToggle && (
-                  <div className="relative shrink-0">
-                    <select
-                      value={templateLanguage}
-                      onChange={(e) => setTemplateLanguage(e.target.value)}
-                      className={`appearance-none text-[11px] font-bold px-2.5 py-1.5 pr-6 rounded-lg cursor-pointer transition-colors ${isDarkMode ? 'bg-white/10 text-gray-300 hover:bg-white/15' : 'bg-orange-50 text-gray-700 hover:bg-orange-100'}`}
-                    >
-                      {templateLangs.map((code) => (
-                        <option key={code} value={code}>
-                          {SUPPORTED_LANGUAGES[code]?.nativeName || code.toUpperCase()}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown size={10} className={`absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                  <div className={`premium-toggle-container ${isDarkMode ? 'dark' : 'light'} scale-90 origin-left shrink-0`}>
+                    {templateLangs.map((code) => (
+                      <button
+                        key={code}
+                        onClick={() => setTemplateLanguage(code)}
+                        className={`premium-toggle-item ${isDarkMode ? 'dark' : 'light'} ${templateLanguage === code ? 'is-active' : ''} !px-2`}
+                        title={SUPPORTED_LANGUAGES[code]?.nativeName || code.toUpperCase()}
+                      >
+                        {getLangShortLabel(code)}
+                      </button>
+                    ))}
                   </div>
                 )}
 
@@ -172,19 +175,17 @@ export const TemplateEditor = React.memo(({
 
                 {/* Language Dropdown - Desktop: Right of Title */}
                 {!isMobileDevice && showLanguageToggle && (
-                  <div className="relative shrink-0">
-                    <select
-                      value={templateLanguage}
-                      onChange={(e) => setTemplateLanguage(e.target.value)}
-                      className={`appearance-none text-[11px] font-bold px-3 py-1.5 pr-7 rounded-lg cursor-pointer transition-colors ${isDarkMode ? 'bg-white/10 text-gray-300 hover:bg-white/15' : 'bg-orange-50 text-gray-700 hover:bg-orange-100'}`}
-                    >
-                      {templateLangs.map((code) => (
-                        <option key={code} value={code}>
-                          {SUPPORTED_LANGUAGES[code]?.nativeName || code.toUpperCase()}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown size={12} className={`absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                  <div className={`premium-toggle-container ${isDarkMode ? 'dark' : 'light'} shrink-0`}>
+                    {templateLangs.map((code) => (
+                      <button
+                        key={code}
+                        onClick={() => setTemplateLanguage(code)}
+                        className={`premium-toggle-item ${isDarkMode ? 'dark' : 'light'} ${templateLanguage === code ? 'is-active' : ''}`}
+                        title={SUPPORTED_LANGUAGES[code]?.nativeName || code.toUpperCase()}
+                      >
+                        {getLangShortLabel(code)}
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>

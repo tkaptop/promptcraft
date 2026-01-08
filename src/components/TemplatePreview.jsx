@@ -513,7 +513,7 @@ export const TemplatePreview = React.memo(({
                                         <button 
                                             onClick={(e) => { e.stopPropagation(); setZoomedImage(currentImageUrl); }}
                                             className={`p-2.5 rounded-full transition-all shadow-lg ${isDarkMode ? 'bg-black/60 text-gray-300 hover:bg-black hover:text-orange-400' : 'bg-white/90 text-gray-700 hover:bg-white hover:text-orange-600'}`}
-                                            title="查看大图"
+                                            title={t('view_large_image')}
                                         >
                                             <ArrowUpRight size={18} />
                                         </button>
@@ -521,21 +521,21 @@ export const TemplatePreview = React.memo(({
                                     <button 
                                         onClick={(e) => { e.stopPropagation(); setImageUpdateMode('replace'); fileInputRef.current?.click(); }}
                                         className={`p-2.5 rounded-full transition-all shadow-lg ${isDarkMode ? 'bg-black/60 text-gray-300 hover:bg-black hover:text-orange-400' : 'bg-white/90 text-gray-700 hover:bg-white hover:text-orange-600'}`}
-                                        title="更换当前图片(本地)"
+                                        title={t('change_image_local')}
                                     >
                                         <Upload size={18} />
                                     </button>
                                     <button 
                                         onClick={(e) => { e.stopPropagation(); setImageUpdateMode('replace'); setShowImageUrlInput(true); }}
                                         className={`p-2.5 rounded-full transition-all shadow-lg ${isDarkMode ? 'bg-black/60 text-gray-300 hover:bg-black hover:text-orange-400' : 'bg-white/90 text-gray-700 hover:bg-white hover:text-orange-600'}`}
-                                        title="更换当前图片(URL)"
+                                        title={t('change_image_url')}
                                     >
                                         <Globe size={18} />
                                     </button>
                                     <button 
                                         onClick={(e) => { e.stopPropagation(); handleResetImage(); }}
                                         className={`p-2.5 rounded-full transition-all shadow-lg ${isDarkMode ? 'bg-black/60 text-gray-300 hover:bg-black hover:text-orange-400' : 'bg-white/90 text-gray-700 hover:bg-white hover:text-orange-600'}`}
-                                        title="恢复默认图片"
+                                        title={t('reset_image')}
                                     >
                                         <RotateCcw size={18} />
                                     </button>
@@ -543,7 +543,7 @@ export const TemplatePreview = React.memo(({
                                         <button 
                                             onClick={(e) => { e.stopPropagation(); if(confirm(t('confirm_delete_image'))) handleDeleteImage(); }}
                                             className={`p-2.5 rounded-full transition-all shadow-lg ${isDarkMode ? 'bg-black/60 text-red-400 hover:bg-red-500 hover:text-white' : 'bg-white/90 text-red-500 hover:bg-red-500 hover:text-white'}`}
-                                            title="删除当前图片"
+                                            title={t('delete_image')}
                                         >
                                             <Trash2 size={18} />
                                         </button>

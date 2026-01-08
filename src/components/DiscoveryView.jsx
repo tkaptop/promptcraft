@@ -8,6 +8,7 @@ import { Sidebar } from './Sidebar';
 import { FireworkEffect } from './FireworkEffect';
 import { SEOContent } from './SEOContent';
 import { Footer } from './Footer';
+import { TitleMark } from './TitleMark';
 import { FEATURE_FLAGS } from '../constants/featureFlags';
 import { TAG_LABELS } from '../constants/styles';
 
@@ -93,10 +94,10 @@ export const DiscoveryView = React.memo(({
           {/* 1. 顶部 SVG 标题区域 */}
           <div className="w-full flex flex-col items-center px-4 gap-2">
             <h1 className="sr-only">{getTranslation(language, 'app_sr_title')}</h1>
-            <img 
-              src={isDarkMode ? "/Title_Dark.svg" : "/Title.svg"} 
-              alt={getTranslation(language, 'app_sr_title')} 
-              className="w-full max-w-[220px] h-auto"
+            <TitleMark
+              language={language}
+              isDarkMode={isDarkMode}
+              className="w-full max-w-[220px]"
             />
             <p className={`text-[10px] opacity-70 text-center px-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               {getTranslation(language, 'app_subtitle')}
@@ -252,10 +253,10 @@ export const DiscoveryView = React.memo(({
               <header className="flex flex-col justify-center items-center lg:items-start lg:w-[280px] xl:w-[320px] flex-shrink-0 px-4 lg:pl-6 lg:pr-2 gap-6">
                   <div className="w-full max-w-[320px] scale-75 sm:scale-85 lg:scale-90 xl:scale-100 origin-center lg:origin-left flex flex-col gap-3">
                       <h1 className="sr-only">{getTranslation(language, 'app_sr_title')}</h1>
-                      <img 
-                          src={isDarkMode ? "/Title_Dark.svg" : "/Title.svg"} 
-                          alt={getTranslation(language, 'app_sr_title')} 
-                          className="w-full h-auto"
+                      <TitleMark
+                        language={language}
+                        isDarkMode={isDarkMode}
+                        className="w-full"
                       />
                       <p className={`text-xs lg:text-sm font-medium leading-relaxed opacity-80 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {getTranslation(language, 'app_description')}
