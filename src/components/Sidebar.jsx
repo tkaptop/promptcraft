@@ -43,7 +43,6 @@ export const Sidebar = ({
   // 统一的容器样式
   const containerStyle = isDarkMode ? {
     width: '62px',
-    height: '100%',
     borderRadius: '16px',
     border: '1px solid transparent',
     backgroundImage: 'linear-gradient(180deg, #3B3B3B 0%, #242120 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)',
@@ -51,7 +50,6 @@ export const Sidebar = ({
     backgroundClip: 'padding-box, border-box',
   } : {
     width: '62px',
-    height: '100%',
     borderRadius: '16px',
     // 使用渐变背景 + 渐变描边技巧 (解决 border-radius 与 border-image 冲突)
     border: '1px solid transparent',
@@ -63,7 +61,7 @@ export const Sidebar = ({
   return (
     <aside 
       style={containerStyle}
-      className="relative flex flex-col items-center py-8 mr-4 flex-shrink-0"
+      className="relative flex flex-col justify-between items-center py-8 mr-4 flex-shrink-0 h-[calc(100dvh-32px)] sticky top-4"
     >
       
       {/* 上部分：Logo + 导航按钮 */}
@@ -158,9 +156,6 @@ export const Sidebar = ({
           </button>
         </div>
       </div>
-
-      {/* 中间留白：把下方设置组稳定推到底部（避免 Showcase 和语言切换挤在一起） */}
-      <div className="flex-1 w-full" />
 
       {/* 下部分：设置组 */}
       <div className="flex flex-col items-center gap-6 w-full">
