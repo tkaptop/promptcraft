@@ -158,8 +158,8 @@ export const DiscoveryView = React.memo(({
     <main
       className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden"
     >
-      {/* Hero Section - First Screen (100vh, independent scroll for waterfall) */}
-      <div className="h-screen flex-shrink-0 flex items-stretch gap-4">
+      {/* Hero Section - First Screen (fill parent height, independent scroll for waterfall) */}
+      <div className="min-h-full flex-shrink-0 flex items-stretch gap-4">
       {/* Middle Side: Categories Sidebar (Desktop Only) - 注释掉，之后版本启用 */}
       {/* {!isMobile && (
         <div 
