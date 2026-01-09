@@ -1,13 +1,5 @@
 {
-  "rewrites": [
-    {
-      "source": "/",
-      "missing": [
-        { "type": "query", "key": "lang" }
-      ],
-      "destination": "/api/locale-redirect"
-    }
-  ]
+  "rewrites": []
 }
 
 
