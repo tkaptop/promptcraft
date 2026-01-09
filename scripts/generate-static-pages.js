@@ -58,6 +58,21 @@ function replaceOrInsert(html, regex, replacement, insertBefore = '</head>') {
   return html.replace(insertBefore, `${replacement}\n${insertBefore}`);
 }
 
+function ensureClarity(html) {
+  // Avoid duplicate injection if dist/index.html already contains it
+  if (/clarity\.ms\/tag\/uyndl07fss/i.test(html) || /\bwindow\.clarity\b/i.test(html)) return html;
+
+  const script = `<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "uyndl07fss");
+  </script>`;
+
+  return html.replace('</head>', `${script}\n</head>`);
+}
+
 function setTitle(html, title) {
   return replaceOrInsert(html, /<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)}</title>`);
 }
@@ -248,6 +263,7 @@ function writePage({ outDir, outFile = 'index.html', html }) {
 function makePage({ pathname, title, description, ogImage, bodyHtml, ldJson, lang = 'en' }) {
   const url = `${SITE_URL}${pathname}`;
   let html = basePageHtml();
+  html = ensureClarity(html);
   html = setHtmlLang(html, lang);
   html = removeAllLdJson(html);
   html = setTitle(html, title);
